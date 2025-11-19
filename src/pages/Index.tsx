@@ -54,16 +54,9 @@ const Index = () => {
   return (
     <SidebarProvider defaultOpen={false}>
       <div className="min-h-screen flex w-full bg-background">
-        {/* Fixed Purple Banner */}
-        <div className="fixed top-0 left-0 right-0 z-50 h-8 bg-brand-primary flex items-center justify-center">
-          <p className="text-xs text-white font-medium tracking-wide">
-            Prototype — UI only. No data leaves this page.
-          </p>
-        </div>
-        
         <AppSidebar />
         
-        <div className="flex-1 flex flex-col mt-8">
+        <div className="flex-1 flex flex-col">
           {/* Top App Bar */}
           <header className="sticky top-0 z-40 h-16 border-b border-border bg-ink/95 backdrop-blur supports-[backdrop-filter]:bg-ink/80">
             <div className="flex h-full items-center gap-4 px-4">
