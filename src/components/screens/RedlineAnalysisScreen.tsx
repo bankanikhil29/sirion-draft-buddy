@@ -66,8 +66,8 @@ export function RedlineAnalysisScreen() {
               <strong className="text-foreground">AI Suggestion:</strong> Accept this change. Extended payment terms are common and within acceptable risk threshold.
             </p>
             <div className="flex gap-2">
-              <Button size="sm">Accept</Button>
-              <Button size="sm" variant="outline">Counter</Button>
+              <Button size="sm" className="transition-all hover:brightness-95">Accept</Button>
+              <Button size="sm" variant="outline" className="transition-all">Counter</Button>
             </div>
           </CardContent>
         </Card>
@@ -96,8 +96,8 @@ export function RedlineAnalysisScreen() {
               <strong className="text-foreground">AI Suggestion:</strong> Counter with 1.5x compromise. This protects both parties while addressing their concern.
             </p>
             <div className="flex gap-2">
-              <Button size="sm">Accept</Button>
-              <Button size="sm" variant="outline">Counter (1.5x)</Button>
+              <Button size="sm" className="transition-all hover:brightness-95">Accept</Button>
+              <Button size="sm" variant="outline" className="transition-all">Counter (1.5x)</Button>
             </div>
           </CardContent>
         </Card>
@@ -123,18 +123,18 @@ export function RedlineAnalysisScreen() {
               <strong className="text-foreground">AI Suggestion:</strong> Accept if infrastructure supports it. This is a standard GDPR compliance request.
             </p>
             <div className="flex gap-2">
-              <Button size="sm">Accept</Button>
-              <Button size="sm" variant="outline">Discuss</Button>
+              <Button size="sm" className="transition-all hover:brightness-95">Accept</Button>
+              <Button size="sm" variant="outline" className="transition-all">Discuss</Button>
             </div>
           </CardContent>
         </Card>
       </div>
 
       <div className="flex gap-3">
-        <Button size="lg" onClick={() => window.location.hash = "#finalize"}>
+        <Button size="lg" onClick={() => window.location.hash = "#finalize"} className="transition-all hover:brightness-95">
           Proceed to Finalize
         </Button>
-        <Button size="lg" variant="outline" onClick={() => window.location.hash = "#draft"}>
+        <Button size="lg" variant="outline" onClick={() => window.location.hash = "#draft"} className="transition-all">
           Back to Draft
         </Button>
       </div>

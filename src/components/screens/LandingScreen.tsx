@@ -29,7 +29,7 @@ export function LandingScreen() {
             <Button
               size="lg"
               variant="gradient"
-              className="gap-2 rounded-full px-8 py-6 text-base"
+              className="gap-2 transition-all hover:brightness-95 hover:shadow-lg hover:-translate-y-0.5"
               onClick={() => window.location.hash = "#new"}
             >
               <Zap className="h-5 w-5" />
@@ -38,7 +38,7 @@ export function LandingScreen() {
             <Button
               size="lg"
               variant="outlineLight"
-              className="rounded-full px-8 py-6 text-base"
+              className="transition-all hover:-translate-y-0.5"
               onClick={() => window.location.hash = "#about"}
             >
               About this assistant
