@@ -67,7 +67,6 @@ const Index = () => {
           {/* Top App Bar */}
           <header className="sticky top-0 z-40 h-16 border-b border-border bg-ink/95 backdrop-blur supports-[backdrop-filter]:bg-ink/80">
             <div className="flex h-full items-center gap-4 px-4">
-              <SidebarTrigger className="shrink-0 lg:hidden" />
               <div className="flex-1">
                 <h1 className="text-lg font-semibold text-foreground tracking-wide">
                   Sirion SmartDraft AI
