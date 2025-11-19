@@ -9,7 +9,7 @@ import { DraftEditorScreen } from "@/components/screens/DraftEditorScreen";
 import { RedlineAnalysisScreen } from "@/components/screens/RedlineAnalysisScreen";
 import { FinalizeScreen } from "@/components/screens/FinalizeScreen";
 import { AboutScreen } from "@/components/screens/AboutScreen";
-import { HelpCircle, X } from "lucide-react";
+import { HelpCircle, Menu } from "lucide-react";
 
 const Index = () => {
   const [currentHash, setCurrentHash] = useState(window.location.hash || "#start");
@@ -52,7 +52,7 @@ const Index = () => {
   };
 
   return (
-    <SidebarProvider defaultOpen={true}>
+    <SidebarProvider defaultOpen={false}>
       <div className="min-h-screen flex w-full bg-background">
         {/* Fixed Purple Banner */}
         <div className="fixed top-0 left-0 right-0 z-50 h-8 bg-brand-primary flex items-center justify-center">
@@ -67,6 +67,9 @@ const Index = () => {
           {/* Top App Bar */}
           <header className="sticky top-0 z-40 h-16 border-b border-border bg-ink/95 backdrop-blur supports-[backdrop-filter]:bg-ink/80">
             <div className="flex h-full items-center gap-4 px-4">
+              <SidebarTrigger className="lg:hidden shrink-0 transition-all hover:bg-brand-primary/20 rounded-md p-2 focus:ring-2 focus:ring-brand-primary">
+                <Menu className="h-5 w-5 text-foreground" />
+              </SidebarTrigger>
               <div className="flex-1">
                 <h1 className="text-lg font-semibold text-foreground tracking-wide">
                   Sirion SmartDraft AI
