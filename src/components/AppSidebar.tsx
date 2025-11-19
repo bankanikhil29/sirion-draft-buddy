@@ -22,8 +22,8 @@ const navItems = [
 ];
 
 export function AppSidebar() {
+  const { state } = useSidebar();
   const [currentHash, setCurrentHash] = useState(window.location.hash || "#start");
-  const { setOpenMobile, isMobile } = useSidebar();
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -34,17 +34,10 @@ export function AppSidebar() {
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
-  const handleNavClick = () => {
-    if (isMobile) {
-      setOpenMobile(false);
-    }
-  };
+  const isCollapsed = state === "collapsed";
 
   return (
-    <Sidebar 
-      collapsible="offcanvas" 
-      className="border-r border-border bg-sidebar-background/95 backdrop-blur mt-8 lg:mt-8"
-    >
+    <Sidebar className="border-r border-border bg-sidebar-background/95 backdrop-blur mt-8">
       <SidebarContent className="pt-4">
         <div className="px-4 pb-4 border-b border-sidebar-border">
           <div className="flex items-center gap-2">
@@ -52,7 +45,9 @@ export function AppSidebar() {
               <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" fill="currentColor" opacity="0.2"/>
               <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            <span className="font-semibold text-foreground text-sm tracking-wide">SmartDraft</span>
+            {!isCollapsed && (
+              <span className="font-semibold text-foreground text-sm tracking-wide">SmartDraft</span>
+            )}
           </div>
         </div>
 
@@ -66,7 +61,6 @@ export function AppSidebar() {
                     <SidebarMenuButton asChild isActive={isActive}>
                       <a
                         href={item.hash}
-                        onClick={handleNavClick}
                         className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all relative focus:ring-2 focus:ring-brand-primary ${
                           isActive 
                             ? "text-brand-primary font-medium before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-8 before:bg-brand-primary before:rounded-r bg-sidebar-accent/50" 
@@ -75,7 +69,7 @@ export function AppSidebar() {
                         aria-label={item.title}
                       >
                         <item.icon className={`h-4 w-4 shrink-0 transition-transform ${isActive ? '' : 'group-hover:-translate-y-0.5'}`} />
-                        <span>{item.title}</span>
+                        {!isCollapsed && <span>{item.title}</span>}
                       </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
