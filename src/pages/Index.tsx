@@ -14,7 +14,6 @@ import { HelpCircle, X } from "lucide-react";
 const Index = () => {
   const [currentHash, setCurrentHash] = useState(window.location.hash || "#start");
   const [securityModalOpen, setSecurityModalOpen] = useState(false);
-  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -77,26 +76,6 @@ const Index = () => {
               </Button>
             </div>
           </header>
-
-          {/* Global Banner */}
-          {!bannerDismissed && (
-            <div className="bg-warn/10 border-b border-warn/20 px-4 py-3">
-              <div className="flex items-center gap-3 max-w-7xl mx-auto">
-                <div className="flex-1 text-sm text-foreground">
-                  <strong>Prototype — UI only.</strong> Do not enter real client data. No network requests are made.
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="shrink-0 h-6 w-6"
-                  onClick={() => setBannerDismissed(true)}
-                  aria-label="Dismiss banner"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          )}
 
           {/* Main Content */}
           <main className="flex-1 p-6">
