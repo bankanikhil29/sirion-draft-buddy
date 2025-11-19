@@ -67,8 +67,8 @@ const Index = () => {
           {/* Top App Bar */}
           <header className="sticky top-0 z-40 h-16 border-b border-border bg-ink/95 backdrop-blur supports-[backdrop-filter]:bg-ink/80">
             <div className="flex h-full items-center gap-4 px-4">
-              <SidebarTrigger className="lg:hidden shrink-0 transition-all hover:bg-brand-primary/20 rounded-md p-2 focus:ring-2 focus:ring-brand-primary">
-                <Menu className="h-5 w-5 text-foreground" />
+              <SidebarTrigger className="lg:hidden shrink-0 transition-all hover:bg-brand-primary/20 rounded-md p-2 focus:ring-2 focus:ring-brand-primary" aria-label="Toggle navigation">
+                <Menu className="h-5 w-5 text-foreground" aria-hidden="true" />
               </SidebarTrigger>
               <div className="flex-1">
                 <h1 className="text-lg font-semibold text-foreground tracking-wide">
