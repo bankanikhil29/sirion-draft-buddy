@@ -38,10 +38,6 @@ export function LandingScreen() {
               About this assistant
             </Button>
           </div>
-
-          <p className="text-xs text-center text-muted-foreground pt-2">
-            Prototype — UI only. Do not enter real client data.
-          </p>
         </CardContent>
       </Card>
     </div>
