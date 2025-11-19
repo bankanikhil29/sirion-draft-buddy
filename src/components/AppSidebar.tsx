@@ -8,6 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Home, FileText, FileEdit, GitCompare, CheckCircle, Info } from "lucide-react";
 
@@ -22,6 +23,7 @@ const navItems = [
 
 export function AppSidebar() {
   const [currentHash, setCurrentHash] = useState(window.location.hash || "#start");
+  const { setOpenMobile, isMobile } = useSidebar();
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -32,8 +34,17 @@ export function AppSidebar() {
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
+  const handleNavClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   return (
-    <Sidebar collapsible="none" className="border-r border-border bg-sidebar-background/95 backdrop-blur mt-8">
+    <Sidebar 
+      collapsible="offcanvas" 
+      className="border-r border-border bg-sidebar-background/95 backdrop-blur mt-8 lg:mt-8"
+    >
       <SidebarContent className="pt-4">
         <div className="px-4 pb-4 border-b border-sidebar-border">
           <div className="flex items-center gap-2">
@@ -55,6 +66,7 @@ export function AppSidebar() {
                     <SidebarMenuButton asChild isActive={isActive}>
                       <a
                         href={item.hash}
+                        onClick={handleNavClick}
                         className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all relative focus:ring-2 focus:ring-brand-primary ${
                           isActive 
                             ? "text-brand-primary font-medium before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-8 before:bg-brand-primary before:rounded-r bg-sidebar-accent/50" 
