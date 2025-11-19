@@ -34,11 +34,9 @@ export function DealDetailsScreen() {
   ];
 
   const validateCustomerName = (value: string) => {
-    const valid = /^[a-zA-Z0-9&.\-\s]+$/;
-    if (value.length < 2 || value.length > 60) {
-      return "Enter 2–60 valid characters (letters/numbers/&/.-/space).";
-    }
-    if (!valid.test(value)) {
+    const trimmed = value.trim();
+    const valid = /^[A-Za-z0-9&.\- ]{2,60}$/;
+    if (!valid.test(trimmed)) {
       return "Enter 2–60 valid characters (letters/numbers/&/.-/space).";
     }
     return "";
@@ -65,7 +63,8 @@ export function DealDetailsScreen() {
   };
 
   const validateSpecialTerms = (value: string) => {
-    if (value.length < 30 || value.length > 600) {
+    const trimmed = value.trim();
+    if (trimmed.length < 30 || trimmed.length > 600) {
       return "Provide 30–600 characters describing terms.";
     }
     return "";
@@ -175,9 +174,11 @@ export function DealDetailsScreen() {
                   id="customer-name"
                   placeholder="e.g., Acme Corporation"
                   value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  onBlur={(e) => setErrors({ ...errors, customerName: validateCustomerName(e.target.value) })}
-                  className={`bg-ink border-border/50 placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-brand-primary ${errors.customerName ? "border-danger" : ""}`}
+                  onChange={(e) => {
+                    setCustomerName(e.target.value);
+                    setErrors({ ...errors, customerName: validateCustomerName(e.target.value) });
+                  }}
+                  className={`bg-ink border-border/50 placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-brand-primary transition-all ${errors.customerName ? "border-danger" : ""}`}
                 />
                 {errors.customerName && (
                   <p className="text-xs text-danger">{errors.customerName}</p>
@@ -232,17 +233,19 @@ export function DealDetailsScreen() {
                 id="special-terms"
                 placeholder="e.g., 1‑year SaaS subscription, $100,000/yr, 1,000 users. Customer requests 99.9% uptime SLA."
                 value={specialTerms}
-                onChange={(e) => setSpecialTerms(e.target.value)}
-                onBlur={(e) => setErrors({ ...errors, specialTerms: validateSpecialTerms(e.target.value) })}
+                onChange={(e) => {
+                  setSpecialTerms(e.target.value);
+                  setErrors({ ...errors, specialTerms: validateSpecialTerms(e.target.value) });
+                }}
                 rows={4}
-                className={`bg-ink border-border/50 placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-brand-primary ${errors.specialTerms ? "border-danger" : ""}`}
+                className={`bg-ink border-border/50 placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-brand-primary transition-all ${errors.specialTerms ? "border-danger" : ""}`}
               />
               <div className="flex justify-between items-center">
                 {errors.specialTerms ? (
                   <p className="text-xs text-danger">{errors.specialTerms}</p>
                 ) : (
                   <p className="text-xs text-muted-foreground/60">
-                    {specialTerms.length}/600 characters
+                    {specialTerms.trim().length}/600 characters
                   </p>
                 )}
               </div>
@@ -250,18 +253,14 @@ export function DealDetailsScreen() {
 
             <div className="border-t border-border/20 pt-6" />
 
-            <p className="text-xs text-muted-foreground/70">
-              Inputs are sanitized and not stored.
-            </p>
-
             <div className="flex gap-4 pt-2">
-              <Button size="lg" variant="gradient" className="flex-1" onClick={handleGenerate}>
+              <Button size="lg" variant="gradient" className="flex-1 transition-all hover:brightness-95 hover:shadow-lg" onClick={handleGenerate}>
                 Generate draft
               </Button>
               <Button
                 size="lg"
                 variant="ghost"
-                className="border border-brand-primary/50 hover:bg-brand-primary/10"
+                className="border border-brand-primary/50 hover:bg-brand-primary/10 transition-all"
                 onClick={() => (window.location.hash = "#start")}
               >
                 Cancel
@@ -274,21 +273,23 @@ export function DealDetailsScreen() {
       {/* S3 Generating Overlay */}
       {showGenerating && (
         <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center">
-          <Card className="w-full max-w-md">
+          <Card className="w-full max-w-md rounded-xl shadow-2xl">
             <CardHeader className="bg-gradient-to-r from-brand-primary/10 to-brand-primary/5 border-b">
               <CardTitle className="text-center">Generating your draft</CardTitle>
             </CardHeader>
             <CardContent className="pt-6 space-y-6">
               <div className="flex justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-4 border-transparent border-t-brand-primary border-r-cyan-500" style={{
+                  background: 'linear-gradient(135deg, transparent 50%, rgba(108, 92, 231, 0.1) 50%)'
+                }}></div>
               </div>
               <div className="space-y-2">
                 {steps.map((step, index) => (
                   <div
                     key={step}
-                    className={`flex items-center gap-2 text-sm ${
+                    className={`flex items-center gap-2 text-sm transition-colors duration-200 ${
                       index === generatingStep
-                        ? "text-brand-primary font-medium"
+                        ? "text-cyan-500 font-medium"
                         : index < generatingStep
                         ? "text-ok"
                         : "text-muted-foreground"
@@ -296,16 +297,13 @@ export function DealDetailsScreen() {
                   >
                     {index < generatingStep && <span>✓</span>}
                     {index === generatingStep && (
-                      <div className="w-2 h-2 rounded-full bg-brand-primary animate-pulse"></div>
+                      <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></div>
                     )}
                     {index > generatingStep && <span className="w-2"></span>}
                     <span>{step}</span>
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-center text-muted-foreground">
-                Simulated generation. No network requests.
-              </p>
             </CardContent>
           </Card>
         </div>

@@ -54,39 +54,40 @@ const Index = () => {
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex w-full bg-background">
+        {/* Fixed Purple Banner */}
+        <div className="fixed top-0 left-0 right-0 z-50 h-8 bg-brand-primary flex items-center justify-center">
+          <p className="text-xs text-white font-medium tracking-wide">
+            Prototype — UI only. No data leaves this page.
+          </p>
+        </div>
+        
         <AppSidebar />
         
-        <div className="flex-1 flex flex-col">
-          {/* Fixed Purple Banner */}
-          <div className="fixed top-0 left-0 right-0 z-50 h-8 bg-brand-primary flex items-center justify-center">
-            <p className="text-xs text-white font-medium">
-              Prototype — UI only. No data leaves this page.
-            </p>
-          </div>
-
+        <div className="flex-1 flex flex-col mt-8">
           {/* Top App Bar */}
-          <header className="sticky top-8 z-40 h-16 border-b border-border bg-ink/95 backdrop-blur supports-[backdrop-filter]:bg-ink/80">
+          <header className="sticky top-0 z-40 h-16 border-b border-border bg-ink/95 backdrop-blur supports-[backdrop-filter]:bg-ink/80">
             <div className="flex h-full items-center gap-4 px-4">
-              <SidebarTrigger className="shrink-0" />
+              <SidebarTrigger className="shrink-0 lg:hidden" />
               <div className="flex-1">
-                <h1 className="text-lg font-semibold text-foreground">
+                <h1 className="text-lg font-semibold text-foreground tracking-wide">
                   Sirion SmartDraft AI
                 </h1>
               </div>
               <Button
                 variant="ghost"
-                size="icon"
+                size="sm"
                 onClick={() => setSecurityModalOpen(true)}
                 aria-label="Security Information"
-                className="rounded-full px-3 py-1 hover:bg-brand-primary/20"
+                className="rounded-full px-3 py-1 hover:bg-brand-primary/20 transition-all focus:ring-2 focus:ring-brand-primary"
               >
-                <HelpCircle className="h-5 w-5" />
+                <HelpCircle className="h-4 w-4 text-muted-foreground transition-transform hover:-translate-y-0.5" />
+                <span className="text-xs ml-1">Help</span>
               </Button>
             </div>
           </header>
 
           {/* Main Content */}
-          <main className="flex-1 p-6 pt-14">
+          <main className="flex-1 p-6">
             <a
               href="#main-content"
               className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md"

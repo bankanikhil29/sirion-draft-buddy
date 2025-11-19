@@ -53,7 +53,7 @@ export function FinalizeScreen() {
           <div className="flex flex-col sm:flex-row gap-3">
             <Button
               size="lg"
-              className="flex-1"
+              className="flex-1 transition-all hover:brightness-95"
               onClick={() => (window.location.hash = "#draft")}
             >
               Back to Draft
@@ -61,7 +61,7 @@ export function FinalizeScreen() {
             <Button
               size="lg"
               variant="outline"
-              className="flex-1"
+              className="flex-1 transition-all"
               onClick={() => (window.location.hash = "#about")}
             >
               About SmartDraft
@@ -71,7 +71,7 @@ export function FinalizeScreen() {
           <div className="pt-4 border-t border-border">
             <Button
               variant="ghost"
-              className="w-full"
+              className="w-full transition-all"
               onClick={() => (window.location.hash = "#start")}
             >
               Start Another Contract
