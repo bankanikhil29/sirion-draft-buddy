@@ -13,30 +13,30 @@ All colors MUST be HSL.
     --brand-primary-700: 258 64% 60%;    /* #5B4FE0 */
     --ink: 222 50% 3%;                   /* #0A0B0D */
     --muted: 220 9% 46%;                 /* #6B7280 */
-    --bg: 225 25% 97%;                   /* #F7F8FB */
-    --surface: 0 0% 100%;                /* #FFFFFF */
+    --bg: 220 20% 8%;                    /* Dark gradient base */
+    --surface: 220 18% 12%;              /* Slightly lighter than bg */
     --ok: 158 64% 52%;                   /* #10B981 */
     --warn: 38 92% 50%;                  /* #F59E0B */
     --danger: 0 72% 51%;                 /* #EF4444 */
 
     /* Design System Mappings */
-    --background: 225 25% 97%;
-    --foreground: 222 50% 3%;
+    --background: 220 20% 8%;
+    --foreground: 0 0% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 50% 3%;
+    --card: 220 18% 12%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 50% 3%;
+    --popover: 220 18% 12%;
+    --popover-foreground: 0 0% 98%;
 
     --primary: 258 72% 65%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 225 25% 95%;
-    --secondary-foreground: 222 50% 3%;
+    --secondary: 220 18% 15%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 225 25% 95%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 220 18% 15%;
+    --muted-foreground: 220 9% 65%;
 
     --accent: 258 72% 65%;
     --accent-foreground: 0 0% 100%;
@@ -44,19 +44,19 @@ All colors MUST be HSL.
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
+    --border: 220 18% 18%;
+    --input: 220 18% 15%;
     --ring: 258 72% 65%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 222 50% 3%;
+    --sidebar-background: 222 50% 3%;
+    --sidebar-foreground: 220 9% 65%;
     --sidebar-primary: 258 72% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 258 72% 97%;
+    --sidebar-accent: 220 18% 15%;
     --sidebar-accent-foreground: 258 72% 65%;
-    --sidebar-border: 220 13% 91%;
+    --sidebar-border: 220 18% 18%;
     --sidebar-ring: 258 72% 65%;
   }
 
@@ -117,5 +117,11 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .gradient-hero {
+    background: radial-gradient(ellipse at top, hsl(180, 50%, 15%), hsl(220, 20%, 8%) 50%, hsl(0, 0%, 0%) 100%);
   }
 }
