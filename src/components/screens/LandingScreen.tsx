@@ -13,11 +13,10 @@ export function LandingScreen() {
             </div>
           </div>
           <CardTitle className="text-3xl font-bold text-foreground">
-            Welcome to Sirion SmartDraft AI
+            SmartDraft AI — Draft contracts faster
           </CardTitle>
           <CardDescription className="text-base text-muted-foreground max-w-lg mx-auto">
-            Create compliant first-draft contracts in minutes with AI-powered guidance. 
-            Reduce review cycles and manage risk with playbook-aware suggestions.
+            Provide a few deal details. Get a compliant first draft in minutes.
           </CardDescription>
         </CardHeader>
         
@@ -29,31 +28,20 @@ export function LandingScreen() {
               onClick={() => window.location.hash = "#new"}
             >
               <Zap className="h-4 w-4" />
-              Start New Contract
+              Start drafting with AI
             </Button>
             <Button
               size="lg"
               variant="outline"
               onClick={() => window.location.hash = "#about"}
             >
-              Learn More
+              About this assistant
             </Button>
           </div>
 
-          <div className="pt-6 grid sm:grid-cols-3 gap-4 text-center">
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-brand-primary">5min</div>
-              <div className="text-sm text-muted-foreground">Avg. Draft Time</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-brand-primary">70%</div>
-              <div className="text-sm text-muted-foreground">Fewer Review Cycles</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-brand-primary">100%</div>
-              <div className="text-sm text-muted-foreground">Compliance Checked</div>
-            </div>
-          </div>
+          <p className="text-xs text-center text-muted-foreground pt-2">
+            Prototype — UI only. Do not enter real client data.
+          </p>
         </CardContent>
       </Card>
     </div>
