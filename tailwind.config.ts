@@ -14,6 +14,18 @@ export default {
     },
     extend: {
       colors: {
+        brand: {
+          DEFAULT: "hsl(var(--brand-primary))",
+          primary: "hsl(var(--brand-primary))",
+          "primary-700": "hsl(var(--brand-primary-700))",
+        },
+        ink: "hsl(var(--ink))",
+        muted: "hsl(var(--muted))",
+        bg: "hsl(var(--bg))",
+        surface: "hsl(var(--surface))",
+        ok: "hsl(var(--ok))",
+        warn: "hsl(var(--warn))",
+        danger: "hsl(var(--danger))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -30,10 +42,6 @@ export default {
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
           DEFAULT: "hsl(var(--accent))",
