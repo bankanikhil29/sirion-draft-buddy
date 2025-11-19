@@ -57,8 +57,15 @@ const Index = () => {
         <AppSidebar />
         
         <div className="flex-1 flex flex-col">
+          {/* Fixed Purple Banner */}
+          <div className="fixed top-0 left-0 right-0 z-50 h-8 bg-brand-primary flex items-center justify-center">
+            <p className="text-xs text-white font-medium">
+              Prototype — UI only. No data leaves this page.
+            </p>
+          </div>
+
           {/* Top App Bar */}
-          <header className="sticky top-0 z-50 h-16 border-b border-border bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/60">
+          <header className="sticky top-8 z-40 h-16 border-b border-border bg-ink/95 backdrop-blur supports-[backdrop-filter]:bg-ink/80">
             <div className="flex h-full items-center gap-4 px-4">
               <SidebarTrigger className="shrink-0" />
               <div className="flex-1">
@@ -71,6 +78,7 @@ const Index = () => {
                 size="icon"
                 onClick={() => setSecurityModalOpen(true)}
                 aria-label="Security Information"
+                className="rounded-full px-3 py-1 hover:bg-brand-primary/20"
               >
                 <HelpCircle className="h-5 w-5" />
               </Button>
@@ -78,7 +86,7 @@ const Index = () => {
           </header>
 
           {/* Main Content */}
-          <main className="flex-1 p-6">
+          <main className="flex-1 p-6 pt-14">
             <a
               href="#main-content"
               className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md"
@@ -91,7 +99,7 @@ const Index = () => {
           </main>
 
           {/* Footer */}
-          <footer className="border-t border-border bg-surface py-4 px-6">
+          <footer className="border-t border-border bg-ink/50 py-4 px-6">
             <div className="text-center text-sm text-muted-foreground">
               © Sirion • Prototype • No tracking • No external requests
             </div>
