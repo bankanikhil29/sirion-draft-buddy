@@ -18,6 +18,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useDraftSession } from "@/contexts/DraftSessionContext";
 import { useFocusBookmarks } from "@/contexts/FocusBookmarksContext";
 import { OCRImportModal } from "@/components/OCRImportModal";
+import { WhyPopover } from "@/components/WhyPopover";
 
 // In-memory contract clause index
 const CLAUSES = [
@@ -405,19 +406,7 @@ export function DraftEditorScreen() {
                   <p className="text-sm text-muted-foreground">
                     Governing Law — Assumed New York (default). Please confirm.
                   </p>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button className="text-xs text-brand-primary hover:underline flex items-center gap-1">
-                          <HelpCircle className="h-3 w-3" />
-                          Why?
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent className="max-w-xs">
-                        <p>Default jurisdiction was used. Customer may prefer their own state or country for dispute resolution.</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <WhyPopover reasonKey="law-default-ny" variant="insight" />
                 </div>
               </div>
             </div>
@@ -430,6 +419,7 @@ export function DraftEditorScreen() {
                   <p className="text-sm text-muted-foreground">
                     Liability cap — Matches policy.
                   </p>
+                  <WhyPopover reasonKey="liability-standard" variant="insight" />
                 </div>
               </div>
             </div>
