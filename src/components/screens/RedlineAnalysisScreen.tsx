@@ -2,13 +2,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { AlertCircle, CheckCircle, XCircle, Info, ExternalLink } from "lucide-react";
+import { AlertCircle, CheckCircle, XCircle, Info, ExternalLink, Star } from "lucide-react";
 import { useAuditLog } from "@/components/AuditLog";
 import { useDraftSession } from "@/contexts/DraftSessionContext";
+import { useFocusBookmarks } from "@/contexts/FocusBookmarksContext";
 
 export function RedlineAnalysisScreen() {
   const { addEvent } = useAuditLog();
   const { markDirty } = useDraftSession();
+  const { addFocus, removeFocus, findByAnchor } = useFocusBookmarks();
 
   const scrollToClause = (clauseId: string) => {
     addEvent("Navigated to clause", `Viewed redline clause: ${clauseId}`);
@@ -120,6 +122,37 @@ export function RedlineAnalysisScreen() {
                 <ExternalLink className="h-3 w-3 mr-1" />
                 Go to clause
               </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-8 px-2"
+                      onClick={() => {
+                        const existing = findByAnchor("clause-7-payment");
+                        if (existing) {
+                          removeFocus(existing.id);
+                        } else {
+                          addFocus({
+                            anchorId: "clause-7-payment",
+                            title: "Payment Terms - Net-45",
+                            snippet: "Payment due within 45 days",
+                            source: 'redline',
+                            severity: 'low'
+                          });
+                        }
+                      }}
+                    >
+                      <Star className={`h-3 w-3 mr-1 ${findByAnchor("clause-7-payment") ? "fill-current text-brand-primary" : ""}`} />
+                      {findByAnchor("clause-7-payment") ? "Unbookmark" : "+ Focus"}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{findByAnchor("clause-7-payment") ? "Remove from Focus" : "Add to Focus bookmarks"}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </CardContent>
         </Card>
@@ -185,6 +218,37 @@ export function RedlineAnalysisScreen() {
                 <ExternalLink className="h-3 w-3 mr-1" />
                 Go to clause
               </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-8 px-2"
+                      onClick={() => {
+                        const existing = findByAnchor("clause-8-liability");
+                        if (existing) {
+                          removeFocus(existing.id);
+                        } else {
+                          addFocus({
+                            anchorId: "clause-8-liability",
+                            title: "Liability Cap - 1x vs 2x",
+                            snippet: "Liability capped at 1x annual contract value",
+                            source: 'redline',
+                            severity: 'medium'
+                          });
+                        }
+                      }}
+                    >
+                      <Star className={`h-3 w-3 mr-1 ${findByAnchor("clause-8-liability") ? "fill-current text-brand-primary" : ""}`} />
+                      {findByAnchor("clause-8-liability") ? "Unbookmark" : "+ Focus"}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{findByAnchor("clause-8-liability") ? "Remove from Focus" : "Add to Focus bookmarks"}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </CardContent>
         </Card>

@@ -12,6 +12,7 @@ import { FinalizeScreen } from "@/components/screens/FinalizeScreen";
 import { AboutScreen } from "@/components/screens/AboutScreen";
 import { HelpCircle, X } from "lucide-react";
 import { DraftSessionProvider } from "@/contexts/DraftSessionContext";
+import { FocusBookmarksProvider } from "@/contexts/FocusBookmarksContext";
 
 const Index = () => {
   const [currentHash, setCurrentHash] = useState(window.location.hash || "#start");
@@ -56,7 +57,8 @@ const Index = () => {
 
   return (
     <DraftSessionProvider>
-      <SidebarProvider defaultOpen={true}>
+      <FocusBookmarksProvider>
+        <SidebarProvider defaultOpen={true}>
         <div className="min-h-screen flex w-full bg-background">
           <AppSidebar />
         
@@ -118,6 +120,7 @@ const Index = () => {
         <SecurityModal open={securityModalOpen} onOpenChange={setSecurityModalOpen} />
         <ReviewerGuideModal open={guideModalOpen} onOpenChange={setGuideModalOpen} />
       </SidebarProvider>
+      </FocusBookmarksProvider>
     </DraftSessionProvider>
   );
 };

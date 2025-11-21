@@ -193,6 +193,56 @@ export function AboutScreen() {
 
       <Card>
         <CardHeader>
+          <CardTitle>New in this prototype: OCR Import & Focus Bookmarks</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">OCR Import (scanned documents → searchable text)</h3>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              <li><strong>Problem:</strong> Third-party or legacy scans block search, risk checks, and metadata extraction.</li>
+              <li><strong>What this does:</strong> Simulates OCR, confidence scores, quick edits, and one-click "Apply to Draft".</li>
+              <li><strong>Value:</strong> Unlocks repository searchability and downstream extraction/analysis for inbound non-searchable contracts.</li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">Focus Bookmarks (watchlist)</h3>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              <li><strong>Problem:</strong> During drafting/negotiation, Sales Ops needs a simple way to track "must resolve" items.</li>
+              <li><strong>What this does:</strong> Bookmark clauses/findings, add notes, jump back, and resolve before finalizing.</li>
+              <li><strong>Value:</strong> Reduces handoffs, keeps attention on risk-bearing terms, and improves close readiness.</li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>How these features fit Sirion (Business sense)</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4 text-muted-foreground">
+          <ul className="space-y-2 text-sm list-disc list-inside">
+            <li>Runs as a Sales Ops agent on agentOS, orchestrating Store/Repository (templates/clauses), Create (Drafting/Negotiation), and Manage (Risk/Performance).</li>
+            <li><strong>KPIs influenced:</strong> Cycle time "Verbal Yes → Signed" (down), Negotiation iterations (down), % drafts from standard templates (up), Legal-touch rate on mid-market deals (down)</li>
+            <li><strong>Guardrails:</strong> Low-confidence OCR blocks are flagged in Insights. Bookmarks are non-blocking but surfaced at Finalize if unresolved.</li>
+          </ul>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>What to click (Reviewer path)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ol className="space-y-2 text-sm text-muted-foreground list-decimal list-inside">
+            <li>Draft Editor → Upload redlines → "Scanned PDF/Image (OCR)" → Apply to Draft</li>
+            <li>Focus tab → Add a few bookmarks from clauses, insights, or redlines</li>
+            <li>Finalize → See the guard modal for unresolved items</li>
+          </ol>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>Powered by Sirion</CardTitle>
           <CardDescription>SmartDraft AI orchestrates across the Sirion platform</CardDescription>
         </CardHeader>

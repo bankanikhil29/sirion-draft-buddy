@@ -1,8 +1,25 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
+import { useState } from "react";
+import { useFocusBookmarks } from "@/contexts/FocusBookmarksContext";
+import { FinalizeGuardModal } from "@/components/FinalizeGuardModal";
 
 export function FinalizeScreen() {
+  const [showGuardModal, setShowGuardModal] = useState(true);
+  const { unresolvedCount, hasUnresolvedHighOrMedium } = useFocusBookmarks();
+
+  const handleProceed = () => {
+    setShowGuardModal(false);
+  };
+
+  const handleReviewFocus = () => {
+    setShowGuardModal(false);
+    window.location.hash = "#draft";
+    setTimeout(() => {
+      // Switch to Focus tab - this will be handled by the DraftEditor's tab state
+    }, 100);
+  };
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
       <Card className="max-w-2xl w-full">
@@ -79,6 +96,16 @@ export function FinalizeScreen() {
           </div>
         </CardContent>
       </Card>
+
+      {hasUnresolvedHighOrMedium && (
+        <FinalizeGuardModal
+          open={showGuardModal}
+          onOpenChange={setShowGuardModal}
+          unresolvedCount={unresolvedCount}
+          onProceed={handleProceed}
+          onReviewFocus={handleReviewFocus}
+        />
+      )}
     </div>
   );
 }
