@@ -15,6 +15,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useToast } from "@/hooks/use-toast";
 import { useAuditLog } from "@/components/AuditLog";
 import { formatDistanceToNow } from "date-fns";
+import { useDraftSession } from "@/contexts/DraftSessionContext";
 
 // In-memory contract clause index
 const CLAUSES = [
@@ -45,14 +46,12 @@ export function DraftEditorScreen() {
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
   
-  // Save state (in-memory)
-  const [dirty, setDirty] = useState(false);
-  const [savedAt, setSavedAt] = useState<Date | undefined>(undefined);
   const [showExportMenu, setShowExportMenu] = useState(false);
   
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const { addEvent } = useAuditLog();
+  const { dirty, savedAt, markDirty, save } = useDraftSession();
 
   const handleSuggestionClick = (question: string) => {
     setChatMessages([...chatMessages, { role: "user", text: question }]);
@@ -83,27 +82,11 @@ export function DraftEditorScreen() {
   const handleFileUpload = () => {
     if (!uploadedFile.trim()) return;
     setShowUploadModal(false);
-    setDirty(true);
+    markDirty();
     setTimeout(() => {
       window.location.hash = "#redlines";
     }, 300);
   };
-
-  const handleSave = useCallback(() => {
-    if (!dirty) return;
-    
-    const now = new Date();
-    setSavedAt(now);
-    setDirty(false);
-    
-    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    toast({
-      title: "Draft saved",
-      description: `Saved at ${timeStr}`,
-    });
-    
-    addEvent("Saved draft", `Saved at ${timeStr}`);
-  }, [dirty, toast, addEvent]);
 
   const handleExportTxt = useCallback(() => {
     const content = document.getElementById('contractContent');
@@ -215,14 +198,14 @@ export function DraftEditorScreen() {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
         if (dirty) {
-          handleSave();
+          save();
         }
       }
     };
     
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [dirty, handleSave]);
+  }, [dirty, save]);
 
   // Debounce search query
   useEffect(() => {
@@ -664,7 +647,7 @@ export function DraftEditorScreen() {
                             variant="outline" 
                             size="sm" 
                             disabled={!dirty}
-                            onClick={handleSave}
+                            onClick={save}
                           >
                             <Save className="h-4 w-4 mr-2" />
                             Save
