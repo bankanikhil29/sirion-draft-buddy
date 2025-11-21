@@ -1,10 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Zap, Target, TrendingUp, Database, FileText, Network } from "lucide-react";
 import { AuditLog } from "@/components/AuditLog";
-
 export function AboutScreen() {
-  return (
-    <div className="max-w-4xl mx-auto space-y-8">
+  return <div className="max-w-4xl mx-auto space-y-8">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-foreground">About SmartDraft AI</h1>
         <p className="text-muted-foreground">
@@ -193,7 +191,17 @@ export function AboutScreen() {
 
       <Card>
         <CardHeader>
-          <CardTitle>New in this prototype: OCR Import & Focus Bookmarks</CardTitle>
+          <CardTitle>
+
+
+
+
+
+
+
+
+
+OCR Import & Focus Bookmarks</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
@@ -316,6 +324,5 @@ export function AboutScreen() {
           </p>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 }
