@@ -308,59 +308,6 @@ OCR Import & Focus Bookmarks</CardTitle>
 
       <Card>
         <CardHeader>
-          <CardTitle>Validations & Guardrails</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 text-muted-foreground">
-          <div>
-            <h3 className="font-semibold text-foreground mb-2">Form-level checks</h3>
-            <ul className="space-y-2 text-sm list-disc list-inside">
-              <li>Customer Name: 2–60 valid characters (letters/numbers/&/.-/space).</li>
-              <li>Special Terms: 30–600 characters (live counter).</li>
-              <li>Start Date: must be today or later (if provided).</li>
-              <li>Effective Year (YYYY): optional; must be 4 digits (2000–2100). If Start Date is set, the year must match Start Date's year.</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-semibold text-foreground mb-2">Draft & negotiation checks</h3>
-            <ul className="space-y-2 text-sm list-disc list-inside">
-              <li>Non-standard terms: flagged in Insights (e.g., SLA 99.9% vs playbook 99.0%).</li>
-              <li>Low-confidence OCR: auto-creates a warning Insight and can be bookmarked as "Needs review."</li>
-              <li>Human-in-the-loop: High/Medium-risk items can be sent to Legal; Finalize shows a soft reminder if important Focus items are still open.</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-semibold text-foreground mb-2">Data handling (prototype)</h3>
-            <ul className="space-y-2 text-sm list-disc list-inside">
-              <li>UI-only demo; all logic runs client-side; no external requests or persistence.</li>
-              <li>Session state resets on refresh. (Security details remain in the Help → Security modal.)</li>
-            </ul>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>How This Fits Sirion (Business Sense)</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 text-muted-foreground">
-          <ul className="space-y-2 text-sm list-disc list-inside">
-            <li>SmartDraft runs as a Sales Ops agent on agentOS, orchestrating Store/Repository (templates & clause variants), Create (Drafting & Negotiation), and Manage (Risk/Performance).</li>
-            <li>OCR unlocks search/risk analysis for inbound third‑party scans and legacy contracts, expanding the searchable repository.</li>
-            <li>Focus Bookmarks reduce handoffs and keep attention on risk-bearing terms, improving close readiness.</li>
-            <li><strong>KPIs influenced:</strong>
-              <ul className="ml-6 mt-1 space-y-1 list-[circle] list-inside">
-                <li>Cycle time "Verbal Yes → Signed" (down)</li>
-                <li>Negotiation iterations (down)</li>
-                <li>% drafts from standard templates (up)</li>
-                <li>Legal-touch rate on mid-market deals (down)</li>
-              </ul>
-            </li>
-          </ul>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
           <CardTitle>Security & Privacy</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-muted-foreground">

@@ -7,14 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { HelpCircle, Briefcase, User, Calendar, DollarSign, FileText } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useToast } from "@/hooks/use-toast";
 
 export function DealDetailsScreen() {
-  const { toast } = useToast();
   const [contractType, setContractType] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [startDate, setStartDate] = useState("");
-  const [effectiveYear, setEffectiveYear] = useState("");
   const [acv, setAcv] = useState("");
   const [specialTerms, setSpecialTerms] = useState("");
   const [showGenerating, setShowGenerating] = useState(false);
@@ -24,7 +21,6 @@ export function DealDetailsScreen() {
     contractType: "",
     customerName: "",
     startDate: "",
-    effectiveYear: "",
     acv: "",
     specialTerms: "",
   });
@@ -57,34 +53,6 @@ export function DealDetailsScreen() {
     return "";
   };
 
-  const validateEffectiveYear = (value: string, checkStartDate: boolean = true) => {
-    if (!value) return ""; // Optional field
-    
-    const trimmed = value.trim();
-    
-    // Must be exactly 4 digits
-    if (!/^\d{4}$/.test(trimmed)) {
-      return "Enter a valid year in YYYY format (2000–2100).";
-    }
-    
-    const year = parseInt(trimmed, 10);
-    
-    // Range check: 2000–2100
-    if (year < 2000 || year > 2100) {
-      return "Enter a valid year in YYYY format (2000–2100).";
-    }
-    
-    // Cross-check with Start Date if present
-    if (checkStartDate && startDate) {
-      const startYear = new Date(startDate).getFullYear();
-      if (year !== startYear) {
-        return "Year must match Start Date's year.";
-      }
-    }
-    
-    return "";
-  };
-
   const validateAcv = (value: string) => {
     if (!value) return "";
     const num = parseFloat(value);
@@ -107,7 +75,6 @@ export function DealDetailsScreen() {
       contractType: contractType ? "" : "Select a contract type.",
       customerName: validateCustomerName(customerName),
       startDate: validateStartDate(startDate),
-      effectiveYear: validateEffectiveYear(effectiveYear),
       acv: validateAcv(acv),
       specialTerms: validateSpecialTerms(specialTerms),
     };
@@ -229,31 +196,7 @@ export function DealDetailsScreen() {
                   id="start-date"
                   type="date"
                   value={startDate}
-                  onChange={(e) => {
-                    const newDate = e.target.value;
-                    setStartDate(newDate);
-                    
-                    // Auto-fill year if empty and date is valid
-                    if (newDate && !effectiveYear) {
-                      const year = new Date(newDate).getFullYear().toString();
-                      setEffectiveYear(year);
-                      toast({
-                        description: "Year synced from Start Date.",
-                        duration: 2000,
-                      });
-                    }
-                    
-                    // Re-validate year if it exists
-                    if (effectiveYear) {
-                      setErrors({ 
-                        ...errors, 
-                        startDate: validateStartDate(newDate),
-                        effectiveYear: validateEffectiveYear(effectiveYear)
-                      });
-                    } else {
-                      setErrors({ ...errors, startDate: validateStartDate(newDate) });
-                    }
-                  }}
+                  onChange={(e) => setStartDate(e.target.value)}
                   onBlur={(e) => setErrors({ ...errors, startDate: validateStartDate(e.target.value) })}
                   className={`bg-ink border-border/50 focus:ring-2 focus:ring-brand-primary ${errors.startDate ? "border-danger" : ""}`}
                 />
@@ -261,34 +204,6 @@ export function DealDetailsScreen() {
                   <p className="text-xs text-danger">{errors.startDate}</p>
                 )}
               </div>
-              <div className="space-y-3">
-                <Label htmlFor="effective-year" className="flex items-center gap-2 text-sm font-medium">
-                  <Calendar className="h-4 w-4 text-brand-primary" />
-                  Effective Year (YYYY)
-                </Label>
-                <Input
-                  id="effective-year"
-                  type="text"
-                  placeholder="e.g., 2026"
-                  value={effectiveYear}
-                  maxLength={4}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, ""); // Only digits
-                    setEffectiveYear(value);
-                    setErrors({ ...errors, effectiveYear: validateEffectiveYear(value) });
-                  }}
-                  onBlur={(e) => setErrors({ ...errors, effectiveYear: validateEffectiveYear(e.target.value) })}
-                  className={`bg-ink border-border/50 placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-brand-primary ${errors.effectiveYear ? "border-danger" : ""}`}
-                  aria-invalid={!!errors.effectiveYear}
-                  aria-describedby={errors.effectiveYear ? "effective-year-error" : undefined}
-                />
-                {errors.effectiveYear && (
-                  <p id="effective-year-error" className="text-xs text-danger">{errors.effectiveYear}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid sm:grid-cols-2 gap-6">
               <div className="space-y-3">
                 <Label htmlFor="acv" className="flex items-center gap-2 text-sm font-medium">
                   <DollarSign className="h-4 w-4 text-brand-primary" />
