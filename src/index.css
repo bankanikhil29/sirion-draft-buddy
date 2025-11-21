@@ -154,4 +154,20 @@ All colors MUST be HSL.
   .gradient-underline:hover::after {
     transform: scaleX(1);
   }
+  
+  /* Clause pulse animation for search results */
+  @keyframes clause-pulse {
+    0%, 100% {
+      background-color: transparent;
+      box-shadow: none;
+    }
+    50% {
+      background-color: hsl(var(--brand-primary) / 0.1);
+      box-shadow: 0 0 0 4px hsl(var(--brand-primary) / 0.3);
+    }
+  }
+
+  .clause-pulse {
+    animation: clause-pulse 800ms ease-out;
+  }
 }
