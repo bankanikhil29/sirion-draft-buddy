@@ -321,8 +321,9 @@ export function DraftEditorScreen() {
         </div>
       </TabsContent>
 
-      <TabsContent value="search" className="flex-1 mt-4 flex flex-col overflow-hidden">
-        <div className="space-y-4">
+      <TabsContent value="search" className="flex h-full min-h-0 flex-col">
+        {/* Sticky header: search input + chips */}
+        <div className="sticky top-0 z-10 bg-[hsl(var(--background))] border-b border-border/20 p-3 space-y-2">
           {/* Search Input */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -385,8 +386,8 @@ export function DraftEditorScreen() {
           </div>
         </div>
 
-        {/* Results */}
-        <div className="flex-1 mt-4 space-y-3 overflow-auto">
+        {/* Scrollable results */}
+        <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-2">
           {!debouncedQuery.trim() ? (
             <div className="text-center py-8 text-muted-foreground text-sm">
               <Search className="h-8 w-8 mx-auto mb-2 opacity-50" />
@@ -483,7 +484,7 @@ export function DraftEditorScreen() {
                         <SheetHeader>
                           <SheetTitle>Analysis</SheetTitle>
                         </SheetHeader>
-                        <div className="mt-6 h-[calc(100%-4rem)]">{rightPanel}</div>
+                        <div className="mt-6 h-[calc(100%-4rem)] flex flex-col min-h-0">{rightPanel}</div>
                       </SheetContent>
                     </Sheet>
                   )}
@@ -577,7 +578,7 @@ export function DraftEditorScreen() {
         {!isMobile && (
           <div className="w-80 xl:w-96">
             <Card className="h-full">
-              <CardContent className="p-4 h-full overflow-hidden">
+              <CardContent className="p-4 h-full flex flex-col min-h-0">
                 {rightPanel}
               </CardContent>
             </Card>
