@@ -30,7 +30,11 @@ export function DraftEditorScreen() {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadedFile, setUploadedFile] = useState("");
   const [chatMessages, setChatMessages] = useState([
-    { role: "system", text: "I can summarize, explain clauses, and suggest edits. Scripted demo — no real AI call." }
+    { role: "system", text: "I can summarize, explain clauses, and suggest edits. Scripted demo — no real AI call." },
+    { role: "user", text: "Is 99.9% uptime standard for us?" },
+    { role: "ai", text: "Standard is 99.0%. 99.9% is higher; mark as Medium risk and seek Ops approval." },
+    { role: "user", text: "Rewrite the termination clause more simply." },
+    { role: "ai", text: "Here's a plain-language version: Either party may end this Agreement with 30 days' notice if the other party materially breaches and doesn't fix it." }
   ]);
   const [chatInput, setChatInput] = useState("");
   
@@ -190,19 +194,21 @@ export function DraftEditorScreen() {
   };
 
   const rightPanel = (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-      <TabsList className="grid w-full grid-cols-3">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col min-h-0">
+      <TabsList className="shrink-0 grid w-full grid-cols-3 border-b border-border/20">
         <TabsTrigger value="insights">Insights</TabsTrigger>
         <TabsTrigger value="ask-ai">Ask AI</TabsTrigger>
         <TabsTrigger value="search">Search</TabsTrigger>
       </TabsList>
       
-      <TabsContent value="insights" className="flex-1 mt-4 space-y-4 overflow-auto">
-        <div>
-          <h4 className="font-semibold text-sm mb-3 flex items-center gap-2 text-foreground">
+      <TabsContent value="insights" forceMount className={`flex-1 flex flex-col min-h-0 ${activeTab !== "insights" ? "hidden" : ""}`}>
+        <div className="shrink-0 p-3 md:p-4 border-b border-border/20">
+          <h4 className="font-semibold text-sm flex items-center gap-2 text-foreground">
             AI Insights & Analysis
           </h4>
-          
+        </div>
+        
+        <div className="flex-1 min-h-0 overflow-y-auto p-3 md:p-4">
           <div className="space-y-3">
             <div className="p-4 bg-warn/10 border border-warn/20 rounded-lg">
               <div className="flex items-start gap-2">
@@ -269,8 +275,9 @@ export function DraftEditorScreen() {
         </div>
       </TabsContent>
       
-      <TabsContent value="ask-ai" className="flex-1 mt-4 flex flex-col overflow-hidden">
-        <div className="flex-1 space-y-3 overflow-auto mb-4">
+      <TabsContent value="ask-ai" forceMount className={`flex-1 flex flex-col min-h-0 ${activeTab !== "ask-ai" ? "hidden" : ""}`}>
+        <div className="flex-1 min-h-0 overflow-y-auto p-3 md:p-4">
+          <div className="space-y-3">
           {chatMessages.map((msg, idx) => (
             <div
               key={idx}
@@ -285,9 +292,10 @@ export function DraftEditorScreen() {
               {msg.text}
             </div>
           ))}
+          </div>
         </div>
 
-        <div className="space-y-3 border-t pt-3">
+        <div className="shrink-0 space-y-3 border-t border-border/20 p-3 md:p-4">
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => handleSuggestionClick("Summarize this contract")}
@@ -321,9 +329,9 @@ export function DraftEditorScreen() {
         </div>
       </TabsContent>
 
-      <TabsContent value="search" className="flex h-full min-h-0 flex-col">
+      <TabsContent value="search" forceMount className={`flex h-full min-h-0 flex-col ${activeTab !== "search" ? "hidden" : ""}`}>
         {/* Sticky header: search input + chips */}
-        <div className="sticky top-0 z-10 bg-[hsl(var(--background))] border-b border-border/20 p-3 space-y-2">
+        <div className="sticky top-0 z-10 bg-[hsl(var(--background))] border-b border-border/20 p-3 md:p-4 space-y-2">
           {/* Search Input */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -387,7 +395,7 @@ export function DraftEditorScreen() {
         </div>
 
         {/* Scrollable results */}
-        <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-2">
+        <div className="flex-1 min-h-0 overflow-y-auto p-3 md:p-4 space-y-2">
           {!debouncedQuery.trim() ? (
             <div className="text-center py-8 text-muted-foreground text-sm">
               <Search className="h-8 w-8 mx-auto mb-2 opacity-50" />
