@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AlertCircle, CheckCircle, XCircle, Info, ExternalLink } from "lucide-react";
 import { useAuditLog } from "@/components/AuditLog";
+import { useDraftSession } from "@/contexts/DraftSessionContext";
 
 export function RedlineAnalysisScreen() {
   const { addEvent } = useAuditLog();
+  const { markDirty } = useDraftSession();
 
   const scrollToClause = (clauseId: string) => {
     addEvent("Navigated to clause", `Viewed redline clause: ${clauseId}`);
@@ -15,6 +17,7 @@ export function RedlineAnalysisScreen() {
   };
 
   const handleAction = (action: string, clause: string) => {
+    markDirty();
     addEvent(`Redline ${action}`, `${action} change in ${clause}`);
   };
 
