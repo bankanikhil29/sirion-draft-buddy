@@ -6,68 +6,60 @@ export interface WhyContent {
 export const WHY_TEXT: Record<string, WhyContent> = {
   // INSIGHTS
   "sla-999": {
-    title: "Service Level is above standard",
+    title: "SLA above standard",
     bullets: [
-      "Playbook standard is 99.0% monthly uptime; 99.9% is treated as an enhanced SLA.",
-      "Enhanced SLAs increase exposure via service credits; approvals required above 99.0%.",
-      "Fallbacks: 99.0% (standard) or 99.5% with credit cap = 1 month fees."
+      "Our playbook standard is 99.0%; 99.9% triggers Ops approval.",
+      "Higher SLA ⇒ service‑credit exposure. Consider 99.0% or 99.5% cap."
     ]
   },
   "law-default-ny": {
-    title: "Default governing law applied",
+    title: "Default jurisdiction",
     bullets: [
-      "No jurisdiction set in intake; defaulted to New York per policy.",
-      "Customer jurisdiction allowed only with Legal approval in regulated or high‑risk deals.",
-      "If counterparty insists on CA/DE, prefer Delaware as neutral alternative."
+      "No input provided; defaulted to New York per policy.",
+      "If customer insists, prefer Delaware; escalate if needed."
     ]
   },
   "liability-standard": {
-    title: "Liability cap matches policy",
+    title: "Liability cap is compliant",
     bullets: [
-      "Cap = fees paid in last 12 months; unlimited only for IP infringement, confidentiality breach, or gross negligence.",
-      "No action required unless counterparty removes the cap."
+      "Cap = fees (12 months). Unlimited only for IP/confidentiality/gross negligence."
     ]
   },
 
   // REDLINES
   "redline-net45-acceptable": {
-    title: "Why Accept Net‑45",
+    title: "Why accept Net‑45",
     bullets: [
-      "Playbook allows payment terms up to Net‑45 for standard SaaS deals.",
-      "Cash impact minimal when ACV ≥ $50k and discount ≤ 15%.",
-      "If ACV < $50k, consider countering with Net‑45 + late fee clause."
+      "Playbook allows up to Net‑45 for standard SaaS deals.",
+      "If ACV < $50k, consider late‑fee clause."
     ]
   },
   "redline-govlaw-ca-medium": {
-    title: "Why Counter Governing Law = CA",
+    title: "Why counter CA law",
     bullets: [
-      "Default is NY; CA tends to increase litigation cost and uncertainty.",
-      "Recommend NY or DE as neutral fallback.",
-      "If prospect insists on CA, escalate to Legal for approval."
+      "Default is NY; CA can increase litigation cost.",
+      "Counter with NY or DE; escalate if customer insists."
     ]
   },
   "redline-liability-uncapped-high": {
-    title: "Why Reject Uncapped Liability",
+    title: "Why reject uncapped",
     bullets: [
-      "Uncapped liability violates baseline risk threshold.",
-      "Only carve‑outs (IP breach, confidentiality breach, gross negligence) can be unlimited.",
-      "Counter with 'cap = 12 months fees' or '2× ACV' depending on risk tier."
+      "Violates baseline risk thresholds.",
+      "Counter with 12‑month fees or 2× ACV cap."
     ]
   },
   "redline-liability-1x": {
-    title: "Why Counter 1x Liability Cap",
+    title: "Why counter 1x cap",
     bullets: [
-      "Playbook rule: Liability caps below 1.5x require Legal review; unlimited liability requires rejection.",
-      "Standard is 2x annual fees; 1x is below acceptable threshold.",
-      "Counter with 1.5x as compromise to protect both parties."
+      "Standard is 2x annual fees; 1x is below threshold.",
+      "Counter with 1.5x as compromise."
     ]
   },
   "redline-data-residency": {
-    title: "Why Accept Data Residency",
+    title: "Why accept residency",
     bullets: [
-      "Playbook rule: Data residency requirements are acceptable if infrastructure supports them.",
-      "EU server requirement is standard GDPR compliance request.",
-      "Verify infrastructure capability before accepting."
+      "Data residency is acceptable if infrastructure supports it.",
+      "Verify capability before accepting."
     ]
   }
 };

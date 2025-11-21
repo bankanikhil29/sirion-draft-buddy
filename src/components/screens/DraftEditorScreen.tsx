@@ -381,19 +381,7 @@ export function DraftEditorScreen() {
                   <p className="text-sm text-muted-foreground">
                     Service Level (99.9%) — Above standard (99.0%). Risk: Medium. May need Ops approval.
                   </p>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button className="text-xs text-brand-primary hover:underline flex items-center gap-1">
-                          <HelpCircle className="h-3 w-3" />
-                          Why?
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent className="max-w-xs">
-                        <p>Higher SLA commitments increase operational risk and may require additional infrastructure investment.</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <WhyPopover reasonKey="sla-999" variant="insight" />
                 </div>
               </div>
             </div>
