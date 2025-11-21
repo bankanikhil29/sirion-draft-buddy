@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, Save, Share2, AlertCircle, HelpCircle, Search, Copy, X, Info, ExternalLink, FileDown, Printer, ClipboardCopy } from "lucide-react";
+import { Upload, Save, Share2, AlertCircle, HelpCircle, Search, Copy, X, Info, ExternalLink, FileDown, Printer, ClipboardCopy, Star, MessageSquare, CheckCircle2, Bookmark } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -16,6 +16,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuditLog } from "@/components/AuditLog";
 import { formatDistanceToNow } from "date-fns";
 import { useDraftSession } from "@/contexts/DraftSessionContext";
+import { useFocusBookmarks } from "@/contexts/FocusBookmarksContext";
+import { OCRImportModal } from "@/components/OCRImportModal";
 
 // In-memory contract clause index
 const CLAUSES = [
@@ -52,6 +54,11 @@ export function DraftEditorScreen() {
   const { toast } = useToast();
   const { addEvent } = useAuditLog();
   const { dirty, savedAt, markDirty, save } = useDraftSession();
+  const { focusItems, addFocus, removeFocus, toggleResolved, updateNote, findByAnchor, unresolvedCount } = useFocusBookmarks();
+  const [editingNote, setEditingNote] = useState<string | null>(null);
+  const [noteText, setNoteText] = useState("");
+  const [focusFilter, setFocusFilter] = useState<"all" | "unresolved" | "resolved">("all");
+  const [severityFilter, setSeverityFilter] = useState<"all" | "high" | "medium" | "low">("all");
 
   const handleSuggestionClick = (question: string) => {
     setChatMessages([...chatMessages, { role: "user", text: question }]);
@@ -79,14 +86,40 @@ export function DraftEditorScreen() {
     setChatInput("");
   };
 
-  const handleFileUpload = () => {
-    if (!uploadedFile.trim()) return;
-    setShowUploadModal(false);
-    markDirty();
-    setTimeout(() => {
-      window.location.hash = "#redlines";
-    }, 300);
-  };
+  const handleExportFocusSummary = useCallback(() => {
+    const lines = [
+      "Focus Items Summary",
+      "===================\n",
+      ...focusItems.map(item => 
+        `Title: ${item.title}\n` +
+        `Severity: ${item.severity || 'N/A'}\n` +
+        `Status: ${item.resolved ? 'Resolved' : 'Open'}\n` +
+        `Note: ${item.note || 'N/A'}\n` +
+        `Created: ${new Date(item.createdAt).toLocaleString()}\n`
+      )
+    ];
+    
+    const text = lines.join('\n');
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    const date = new Date().toISOString().split('T')[0];
+    a.download = `FocusSummary_${date}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Focus summary exported",
+      description: "File downloaded successfully.",
+    });
+    
+    setShowExportMenu(false);
+    addEvent("Exported Focus summary", "Downloaded as .txt");
+  }, [focusItems, toast, addEvent]);
 
   const handleExportTxt = useCallback(() => {
     const content = document.getElementById('contractContent');
@@ -321,10 +354,13 @@ export function DraftEditorScreen() {
 
   const rightPanel = (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col min-h-0">
-      <TabsList className="shrink-0 grid w-full grid-cols-3 border-b border-border/20">
+      <TabsList className="shrink-0 grid w-full grid-cols-4 border-b border-border/20">
         <TabsTrigger value="insights">Insights</TabsTrigger>
         <TabsTrigger value="ask-ai">Ask AI</TabsTrigger>
         <TabsTrigger value="search">Search</TabsTrigger>
+        <TabsTrigger value="focus">
+          Focus {unresolvedCount > 0 && `(${unresolvedCount})`}
+        </TabsTrigger>
       </TabsList>
       
       <TabsContent value="insights" forceMount className={`flex-1 flex flex-col min-h-0 ${activeTab !== "insights" ? "hidden" : ""}`}>
@@ -587,6 +623,226 @@ export function DraftEditorScreen() {
           )}
         </div>
       </TabsContent>
+
+      <TabsContent value="focus" forceMount className={`flex h-full min-h-0 flex-col ${activeTab !== "focus" ? "hidden" : ""}`}>
+        {/* Sticky header: filters */}
+        <div className="sticky top-0 z-10 bg-[hsl(var(--background))] border-b border-border/20 p-3 md:p-4 space-y-2">
+          <h4 className="font-semibold text-sm text-foreground">Focus Bookmarks</h4>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setFocusFilter("all")}
+              className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                focusFilter === "all"
+                  ? "bg-brand-primary text-white border-brand-primary"
+                  : "bg-muted/30 border-border hover:bg-muted"
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFocusFilter("unresolved")}
+              className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                focusFilter === "unresolved"
+                  ? "bg-brand-primary text-white border-brand-primary"
+                  : "bg-muted/30 border-border hover:bg-muted"
+              }`}
+            >
+              Unresolved
+            </button>
+            <button
+              onClick={() => setFocusFilter("resolved")}
+              className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                focusFilter === "resolved"
+                  ? "bg-brand-primary text-white border-brand-primary"
+                  : "bg-muted/30 border-border hover:bg-muted"
+              }`}
+            >
+              Resolved
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
+            <button
+              onClick={() => setSeverityFilter("all")}
+              className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                severityFilter === "all"
+                  ? "bg-brand-primary text-white border-brand-primary"
+                  : "bg-muted/30 border-border hover:bg-muted"
+              }`}
+            >
+              All severities
+            </button>
+            <button
+              onClick={() => setSeverityFilter("high")}
+              className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                severityFilter === "high"
+                  ? "bg-danger text-white border-danger"
+                  : "bg-muted/30 border-border hover:bg-muted"
+              }`}
+            >
+              High
+            </button>
+            <button
+              onClick={() => setSeverityFilter("medium")}
+              className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                severityFilter === "medium"
+                  ? "bg-warn text-white border-warn"
+                  : "bg-muted/30 border-border hover:bg-muted"
+              }`}
+            >
+              Medium
+            </button>
+            <button
+              onClick={() => setSeverityFilter("low")}
+              className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                severityFilter === "low"
+                  ? "bg-ok text-white border-ok"
+                  : "bg-muted/30 border-border hover:bg-muted"
+              }`}
+            >
+              Low
+            </button>
+          </div>
+        </div>
+
+        {/* Scrollable list */}
+        <div className="flex-1 min-h-0 overflow-y-auto p-3 md:p-4 space-y-3">
+          {focusItems
+            .filter(item => {
+              if (focusFilter === "unresolved" && item.resolved) return false;
+              if (focusFilter === "resolved" && !item.resolved) return false;
+              if (severityFilter !== "all" && item.severity !== severityFilter) return false;
+              return true;
+            })
+            .length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground text-sm">
+              <Bookmark className="h-8 w-8 mx-auto mb-2 opacity-50" />
+              <p>No focus items yet</p>
+              <p className="text-xs mt-1">Bookmark key clauses to track them here</p>
+            </div>
+          ) : (
+            focusItems
+              .filter(item => {
+                if (focusFilter === "unresolved" && item.resolved) return false;
+                if (focusFilter === "resolved" && !item.resolved) return false;
+                if (severityFilter !== "all" && item.severity !== severityFilter) return false;
+                return true;
+              })
+              .map(item => (
+                <div
+                  key={item.id}
+                  className={`p-4 rounded-lg border ${
+                    item.resolved ? "bg-muted/20 border-border" : "bg-surface/50 border-border"
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <h5 className="font-semibold text-sm text-foreground flex items-center gap-2">
+                          {item.title}
+                          {item.severity && (
+                            <span
+                              className={`w-2 h-2 rounded-full ${
+                                item.severity === "high"
+                                  ? "bg-danger"
+                                  : item.severity === "medium"
+                                  ? "bg-warn"
+                                  : "bg-ok"
+                              }`}
+                            />
+                          )}
+                        </h5>
+                        <Badge variant="outline" className="text-xs">
+                          {item.source}
+                        </Badge>
+                      </div>
+                      {item.snippet && (
+                        <p className="text-sm text-muted-foreground line-clamp-2">{item.snippet}</p>
+                      )}
+                      {item.note && (
+                        <div className="p-2 bg-muted/30 rounded text-xs text-muted-foreground border-l-2 border-brand-primary">
+                          {item.note}
+                        </div>
+                      )}
+                      {editingNote === item.id && (
+                        <div className="space-y-2">
+                          <Textarea
+                            value={noteText}
+                            onChange={(e) => setNoteText(e.target.value)}
+                            placeholder="Add a note (max 140 chars)..."
+                            maxLength={140}
+                            rows={2}
+                            className="text-xs"
+                          />
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              onClick={() => {
+                                updateNote(item.id, noteText);
+                                setEditingNote(null);
+                                setNoteText("");
+                              }}
+                            >
+                              Save
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                setEditingNote(null);
+                                setNoteText("");
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2 pt-1">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => scrollToClause(item.anchorId)}
+                          className="h-7 text-xs"
+                        >
+                          Go to clause
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            setEditingNote(item.id);
+                            setNoteText(item.note || "");
+                          }}
+                          className="h-7 text-xs"
+                        >
+                          <MessageSquare className="h-3 w-3 mr-1" />
+                          Note
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => toggleResolved(item.id)}
+                          className="h-7 text-xs"
+                        >
+                          <CheckCircle2 className="h-3 w-3 mr-1" />
+                          {item.resolved ? "Reopen" : "Resolve"}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => removeFocus(item.id)}
+                          className="h-7 text-xs text-danger hover:text-danger"
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+          )}
+        </div>
+      </TabsContent>
     </Tabs>
   );
 
@@ -695,6 +951,15 @@ export function DraftEditorScreen() {
                           <ClipboardCopy className="h-4 w-4 mr-2" />
                           Copy contract text
                         </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start"
+                          onClick={handleExportFocusSummary}
+                        >
+                          <Bookmark className="h-4 w-4 mr-2" />
+                          Download Focus summary (.txt)
+                        </Button>
                       </div>
                     </PopoverContent>
                   </Popover>
@@ -711,14 +976,80 @@ export function DraftEditorScreen() {
 
                 <div className="space-y-3">
                   <div id="clause-2-term" className="transition-all duration-300">
-                    <h3 className="text-base font-semibold text-foreground mb-2">2. Term</h3>
+                    <h3 className="text-base font-semibold text-foreground mb-2 flex items-center justify-between group">
+                      <span>2. Term</span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={() => {
+                                const existing = findByAnchor("clause-2-term");
+                                if (existing) {
+                                  removeFocus(existing.id);
+                                } else {
+                                  addFocus({
+                                    anchorId: "clause-2-term",
+                                    title: "Term",
+                                    snippet: CLAUSES[0].text,
+                                    source: 'clause',
+                                    severity: 'low'
+                                  });
+                                }
+                              }}
+                              className={`p-1 rounded transition-all opacity-0 group-hover:opacity-100 ${
+                                findByAnchor("clause-2-term") ? "text-brand-primary" : "text-muted-foreground hover:text-foreground"
+                              }`}
+                              aria-label={findByAnchor("clause-2-term") ? "Remove bookmark" : "Add bookmark"}
+                            >
+                              <Star className={`h-4 w-4 ${findByAnchor("clause-2-term") ? "fill-current" : ""}`} />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{findByAnchor("clause-2-term") ? "Remove bookmark" : "Add bookmark"}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </h3>
                     <p className="text-muted-foreground">12 months from Effective Date.</p>
                   </div>
 
                   <div id="clause-5-service-levels" className="p-3 bg-brand-primary/5 border-l-4 border-brand-primary rounded transition-all duration-300">
-                    <h3 className="text-base font-semibold text-foreground mb-2 flex items-center gap-2">
-                      5. Service Levels
-                      <span className="text-xs text-brand-primary bg-brand-primary/10 px-2 py-0.5 rounded">Highlighted</span>
+                    <h3 className="text-base font-semibold text-foreground mb-2 flex items-center gap-2 justify-between group">
+                      <span className="flex items-center gap-2">
+                        5. Service Levels
+                        <span className="text-xs text-brand-primary bg-brand-primary/10 px-2 py-0.5 rounded">Highlighted</span>
+                      </span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={() => {
+                                const existing = findByAnchor("clause-5-service-levels");
+                                if (existing) {
+                                  removeFocus(existing.id);
+                                } else {
+                                  addFocus({
+                                    anchorId: "clause-5-service-levels",
+                                    title: "Service Levels",
+                                    snippet: CLAUSES[1].text,
+                                    source: 'clause',
+                                    severity: 'medium'
+                                  });
+                                }
+                              }}
+                              className={`p-1 rounded transition-all opacity-0 group-hover:opacity-100 ${
+                                findByAnchor("clause-5-service-levels") ? "text-brand-primary" : "text-muted-foreground hover:text-foreground"
+                              }`}
+                              aria-label={findByAnchor("clause-5-service-levels") ? "Remove bookmark" : "Add bookmark"}
+                            >
+                              <Star className={`h-4 w-4 ${findByAnchor("clause-5-service-levels") ? "fill-current" : ""}`} />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{findByAnchor("clause-5-service-levels") ? "Remove bookmark" : "Add bookmark"}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </h3>
                     <p className="text-muted-foreground">
                       Provider maintains 99.9% monthly uptime. Service credits are provided per Schedule A if this threshold is not met.
@@ -726,23 +1057,122 @@ export function DraftEditorScreen() {
                   </div>
 
                   <div id="clause-7-payment" className="transition-all duration-300">
-                    <h3 className="text-base font-semibold text-foreground mb-2">7. Payment Terms</h3>
+                    <h3 className="text-base font-semibold text-foreground mb-2 flex items-center justify-between group">
+                      <span>7. Payment Terms</span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={() => {
+                                const existing = findByAnchor("clause-7-payment");
+                                if (existing) {
+                                  removeFocus(existing.id);
+                                } else {
+                                  addFocus({
+                                    anchorId: "clause-7-payment",
+                                    title: "Payment Terms",
+                                    snippet: CLAUSES[2].text,
+                                    source: 'clause',
+                                    severity: 'low'
+                                  });
+                                }
+                              }}
+                              className={`p-1 rounded transition-all opacity-0 group-hover:opacity-100 ${
+                                findByAnchor("clause-7-payment") ? "text-brand-primary" : "text-muted-foreground hover:text-foreground"
+                              }`}
+                              aria-label={findByAnchor("clause-7-payment") ? "Remove bookmark" : "Add bookmark"}
+                            >
+                              <Star className={`h-4 w-4 ${findByAnchor("clause-7-payment") ? "fill-current" : ""}`} />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{findByAnchor("clause-7-payment") ? "Remove bookmark" : "Add bookmark"}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </h3>
                     <p className="text-muted-foreground">
                       Fees are due within 30 days from invoice date unless otherwise agreed.
                     </p>
                   </div>
 
                   <div id="clause-8-liability" className="transition-all duration-300">
-                    <h3 className="text-base font-semibold text-foreground mb-2">8. Limitation of Liability</h3>
+                    <h3 className="text-base font-semibold text-foreground mb-2 flex items-center justify-between group">
+                      <span>8. Limitation of Liability</span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={() => {
+                                const existing = findByAnchor("clause-8-liability");
+                                if (existing) {
+                                  removeFocus(existing.id);
+                                } else {
+                                  addFocus({
+                                    anchorId: "clause-8-liability",
+                                    title: "Limitation of Liability",
+                                    snippet: CLAUSES[3].text,
+                                    source: 'clause',
+                                    severity: 'medium'
+                                  });
+                                }
+                              }}
+                              className={`p-1 rounded transition-all opacity-0 group-hover:opacity-100 ${
+                                findByAnchor("clause-8-liability") ? "text-brand-primary" : "text-muted-foreground hover:text-foreground"
+                              }`}
+                              aria-label={findByAnchor("clause-8-liability") ? "Remove bookmark" : "Add bookmark"}
+                            >
+                              <Star className={`h-4 w-4 ${findByAnchor("clause-8-liability") ? "fill-current" : ""}`} />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{findByAnchor("clause-8-liability") ? "Remove bookmark" : "Add bookmark"}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </h3>
                     <p className="text-muted-foreground">
                       Each party's liability is capped at the total fees paid under this Agreement in the twelve months preceding the claim.
                     </p>
                   </div>
 
                   <div id="clause-12-governing-law" className="p-3 bg-muted/30 border-l-4 border-muted rounded transition-all duration-300">
-                    <h3 className="text-base font-semibold text-foreground mb-2 flex items-center gap-2">
-                      12. Governing Law
-                      <span className="text-xs text-muted-foreground bg-muted/50 px-2 py-0.5 rounded">Assumption</span>
+                    <h3 className="text-base font-semibold text-foreground mb-2 flex items-center gap-2 justify-between group">
+                      <span className="flex items-center gap-2">
+                        12. Governing Law
+                        <span className="text-xs text-muted-foreground bg-muted/50 px-2 py-0.5 rounded">Assumption</span>
+                      </span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={() => {
+                                const existing = findByAnchor("clause-12-governing-law");
+                                if (existing) {
+                                  removeFocus(existing.id);
+                                } else {
+                                  addFocus({
+                                    anchorId: "clause-12-governing-law",
+                                    title: "Governing Law",
+                                    snippet: CLAUSES[4].text,
+                                    source: 'clause',
+                                    severity: 'low'
+                                  });
+                                }
+                              }}
+                              className={`p-1 rounded transition-all opacity-0 group-hover:opacity-100 ${
+                                findByAnchor("clause-12-governing-law") ? "text-brand-primary" : "text-muted-foreground hover:text-foreground"
+                              }`}
+                              aria-label={findByAnchor("clause-12-governing-law") ? "Remove bookmark" : "Add bookmark"}
+                            >
+                              <Star className={`h-4 w-4 ${findByAnchor("clause-12-governing-law") ? "fill-current" : ""}`} />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{findByAnchor("clause-12-governing-law") ? "Remove bookmark" : "Add bookmark"}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </h3>
                     <p className="text-muted-foreground">
                       This Agreement shall be governed by the laws of the State of New York, USA.
@@ -766,43 +1196,8 @@ export function DraftEditorScreen() {
         )}
       </div>
 
-      {/* S7 Upload Redlines Modal */}
-      <Dialog open={showUploadModal} onOpenChange={setShowUploadModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Upload client's redlined contract</DialogTitle>
-            <DialogDescription>
-              Select the redlined document to analyze changes and get AI recommendations.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-              <Upload className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-              <p className="text-sm text-muted-foreground mb-3">
-                Drag and drop your file here, or click to browse
-              </p>
-              <Input
-                type="text"
-                placeholder="Enter file name (demo)"
-                value={uploadedFile}
-                onChange={(e) => setUploadedFile(e.target.value)}
-                className="max-w-xs mx-auto"
-              />
-            </div>
-            <p className="text-xs text-muted-foreground text-center">
-              Files are not transmitted — UI simulation only.
-            </p>
-            <div className="flex gap-3">
-              <Button className="flex-1" onClick={handleFileUpload} disabled={!uploadedFile.trim()}>
-                Analyze changes
-              </Button>
-              <Button variant="outline" onClick={() => setShowUploadModal(false)}>
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* OCR Import Modal */}
+      <OCRImportModal open={showUploadModal} onOpenChange={setShowUploadModal} />
     </>
   );
 }
