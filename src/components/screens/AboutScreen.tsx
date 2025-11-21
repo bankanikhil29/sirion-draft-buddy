@@ -335,7 +335,7 @@ OCR Import & Focus Bookmarks</CardTitle>
 
       <Card>
         <CardHeader>
-          <CardTitle>Why We're Building This (Business Perspective)</CardTitle>
+          <CardTitle>Why We're Building This    </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
