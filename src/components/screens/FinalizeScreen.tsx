@@ -7,7 +7,7 @@ import { FinalizeGuardModal } from "@/components/FinalizeGuardModal";
 
 export function FinalizeScreen() {
   const [showGuardModal, setShowGuardModal] = useState(true);
-  const { unresolvedCount, hasUnresolvedHighOrMedium } = useFocusBookmarks();
+  const { unresolvedCount, hasUnresolvedHighOrMedium, unresolvedOCRCount, hasUnresolvedOCR } = useFocusBookmarks();
 
   const handleProceed = () => {
     setShowGuardModal(false);
@@ -97,11 +97,13 @@ export function FinalizeScreen() {
         </CardContent>
       </Card>
 
-      {hasUnresolvedHighOrMedium && (
+      {(hasUnresolvedHighOrMedium || hasUnresolvedOCR) && (
         <FinalizeGuardModal
           open={showGuardModal}
           onOpenChange={setShowGuardModal}
           unresolvedCount={unresolvedCount}
+          unresolvedOCRCount={unresolvedOCRCount}
+          hasUnresolvedOCR={hasUnresolvedOCR}
           onProceed={handleProceed}
           onReviewFocus={handleReviewFocus}
         />
