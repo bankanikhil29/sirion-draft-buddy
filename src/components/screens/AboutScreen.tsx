@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shield, Zap, Target, TrendingUp } from "lucide-react";
+import { Shield, Zap, Target, TrendingUp, Database, FileText, Network } from "lucide-react";
+import { AuditLog } from "@/components/AuditLog";
 
 export function AboutScreen() {
   return (
@@ -164,6 +165,88 @@ export function AboutScreen() {
           </ol>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Business Fit & KPIs</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">How This Extends Sirion</h3>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              <li>Runs as a Sales Ops agent on agentOS, orchestrating Store/Repository (templates & clauses), Create (Drafting/Negotiation), and Manage (Risk/Performance).</li>
+              <li>Keeps contracts, permissions, and audit trails fully governed inside Sirion.</li>
+              <li>Improves Drafting/Negotiation adoption in Sales and reduces Legal load on standard deals.</li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">Key Performance Indicators</h3>
+            <ul className="space-y-1 text-sm text-muted-foreground list-disc list-inside">
+              <li>Cycle time: "Verbal Yes" → Signed (target −40%)</li>
+              <li>Negotiation iterations (target ≤2 rounds average)</li>
+              <li>% drafts from standard templates (target +30%)</li>
+              <li>Legal-touch rate in mid‑market deals (target −25%)</li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Powered by Sirion</CardTitle>
+          <CardDescription>SmartDraft AI orchestrates across the Sirion platform</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center space-y-2">
+              <div className="flex justify-center">
+                <div className="p-3 bg-brand-primary/10 rounded-lg">
+                  <Database className="h-6 w-6 text-brand-primary" />
+                </div>
+              </div>
+              <div>
+                <p className="font-medium text-sm text-foreground">Repository</p>
+                <p className="text-xs text-muted-foreground">Templates & clauses</p>
+              </div>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="flex justify-center">
+                <div className="p-3 bg-brand-primary/10 rounded-lg">
+                  <FileText className="h-6 w-6 text-brand-primary" />
+                </div>
+              </div>
+              <div>
+                <p className="font-medium text-sm text-foreground">Drafting</p>
+                <p className="text-xs text-muted-foreground">AI-powered creation</p>
+              </div>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="flex justify-center">
+                <div className="p-3 bg-brand-primary/10 rounded-lg">
+                  <Network className="h-6 w-6 text-brand-primary" />
+                </div>
+              </div>
+              <div>
+                <p className="font-medium text-sm text-foreground">Negotiation</p>
+                <p className="text-xs text-muted-foreground">Redline analysis</p>
+              </div>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="flex justify-center">
+                <div className="p-3 bg-brand-primary/10 rounded-lg">
+                  <Shield className="h-6 w-6 text-brand-primary" />
+                </div>
+              </div>
+              <div>
+                <p className="font-medium text-sm text-foreground">Risk</p>
+                <p className="text-xs text-muted-foreground">Compliance & approval</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <AuditLog />
 
       <Card>
         <CardHeader>
