@@ -6,13 +6,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, Save, Share2, AlertCircle, HelpCircle, Search, Copy, X, Info, ExternalLink } from "lucide-react";
+import { Upload, Save, Share2, AlertCircle, HelpCircle, Search, Copy, X, Info, ExternalLink, FileDown, Printer, ClipboardCopy } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { useAuditLog } from "@/components/AuditLog";
+import { formatDistanceToNow } from "date-fns";
 
 // In-memory contract clause index
 const CLAUSES = [
@@ -42,6 +44,11 @@ export function DraftEditorScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
+  
+  // Save state (in-memory)
+  const [dirty, setDirty] = useState(false);
+  const [savedAt, setSavedAt] = useState<Date | undefined>(undefined);
+  const [showExportMenu, setShowExportMenu] = useState(false);
   
   const isMobile = useIsMobile();
   const { toast } = useToast();
@@ -76,10 +83,146 @@ export function DraftEditorScreen() {
   const handleFileUpload = () => {
     if (!uploadedFile.trim()) return;
     setShowUploadModal(false);
+    setDirty(true);
     setTimeout(() => {
       window.location.hash = "#redlines";
     }, 300);
   };
+
+  const handleSave = useCallback(() => {
+    if (!dirty) return;
+    
+    const now = new Date();
+    setSavedAt(now);
+    setDirty(false);
+    
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    toast({
+      title: "Draft saved",
+      description: `Saved at ${timeStr}`,
+    });
+    
+    addEvent("Saved draft", `Saved at ${timeStr}`);
+  }, [dirty, toast, addEvent]);
+
+  const handleExportTxt = useCallback(() => {
+    const content = document.getElementById('contractContent');
+    if (!content) return;
+    
+    const text = content.innerText;
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    const date = new Date().toISOString().split('T')[0];
+    a.download = `SmartDraft_Acme_${date}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Exported as .txt",
+      description: "File downloaded successfully.",
+    });
+    
+    setShowExportMenu(false);
+    addEvent("Exported contract", "Downloaded as .txt");
+  }, [toast, addEvent]);
+
+  const handleExportPrint = useCallback(() => {
+    const content = document.getElementById('contractContent');
+    if (!content) return;
+    
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      toast({
+        variant: "destructive",
+        title: "Print blocked",
+        description: "Please allow popups to print.",
+      });
+      return;
+    }
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Master SaaS Agreement - Print</title>
+          <style>
+            body { font-family: system-ui, -apple-system, sans-serif; padding: 24px; color: #000; background: #fff; }
+            h1 { font-size: 24px; font-weight: bold; margin-bottom: 16px; }
+            h3 { font-size: 16px; font-weight: 600; margin-top: 16px; margin-bottom: 8px; }
+            p { margin-bottom: 12px; line-height: 1.6; }
+            .clause { margin-bottom: 16px; }
+          </style>
+        </head>
+        <body>
+          ${content.innerHTML}
+        </body>
+      </html>
+    `;
+    
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.print();
+    setTimeout(() => printWindow.close(), 500);
+    
+    toast({
+      title: "Opened print dialog",
+      description: "Ready to save as PDF.",
+    });
+    
+    setShowExportMenu(false);
+    addEvent("Exported contract", "Opened print dialog");
+  }, [toast, addEvent]);
+
+  const handleCopyText = useCallback(() => {
+    const content = document.getElementById('contractContent');
+    if (!content) return;
+    
+    const text = content.innerText;
+    
+    if (!navigator.clipboard) {
+      toast({
+        variant: "destructive",
+        title: "Clipboard not available",
+        description: "Clipboard API not supported.",
+      });
+      return;
+    }
+    
+    navigator.clipboard.writeText(text).then(() => {
+      toast({
+        title: "Contract text copied",
+        description: "Text copied to clipboard.",
+      });
+      setShowExportMenu(false);
+      addEvent("Copied contract text", "Copied to clipboard");
+    }).catch(() => {
+      toast({
+        variant: "destructive",
+        title: "Copy failed",
+        description: "Failed to copy to clipboard.",
+      });
+    });
+  }, [toast, addEvent]);
+
+  // Keyboard shortcut for Save (Ctrl+S / Cmd+S)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        if (dirty) {
+          handleSave();
+        }
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [dirty, handleSave]);
 
   // Debounce search query
   useEffect(() => {
@@ -479,7 +622,20 @@ export function DraftEditorScreen() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-                <h2 className="text-xl font-semibold text-foreground">Contract Draft</h2>
+                <div className="flex items-center gap-3">
+                  <h2 className="text-xl font-semibold text-foreground">Contract Draft</h2>
+                  {dirty && (
+                    <span className="flex items-center gap-1.5 text-xs text-warn">
+                      <span className="h-1.5 w-1.5 rounded-full bg-warn animate-pulse" />
+                      Unsaved changes
+                    </span>
+                  )}
+                  {!dirty && savedAt && (
+                    <span className="text-xs text-muted-foreground">
+                      Saved {formatDistanceToNow(savedAt, { addSuffix: true })}
+                    </span>
+                  )}
+                </div>
                 <div className="flex gap-2 flex-wrap">
                   {isMobile && (
                     <Sheet>
@@ -503,34 +659,67 @@ export function DraftEditorScreen() {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button variant="outline" size="sm" disabled>
-                          <Save className="h-4 w-4 mr-2" />
-                          Save
-                        </Button>
+                        <span>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            disabled={!dirty}
+                            onClick={handleSave}
+                          >
+                            <Save className="h-4 w-4 mr-2" />
+                            Save
+                          </Button>
+                        </span>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Prototype — saving disabled</p>
+                        <p>{dirty ? "Save changes (Ctrl+S)" : "No changes to save"}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="outline" size="sm" disabled>
-                          <Share2 className="h-4 w-4 mr-2" />
-                          Export
+                  <Popover open={showExportMenu} onOpenChange={setShowExportMenu}>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        <Share2 className="h-4 w-4 mr-2" />
+                        Export
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-56 p-2">
+                      <div className="space-y-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start"
+                          onClick={handleExportTxt}
+                        >
+                          <FileDown className="h-4 w-4 mr-2" />
+                          Download .txt
                         </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Prototype — disabled</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start"
+                          onClick={handleExportPrint}
+                        >
+                          <Printer className="h-4 w-4 mr-2" />
+                          Print / Save as PDF
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start"
+                          onClick={handleCopyText}
+                        >
+                          <ClipboardCopy className="h-4 w-4 mr-2" />
+                          Copy contract text
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
 
               {/* Document content */}
-              <div className="prose prose-sm max-w-none space-y-4 p-4 bg-surface border border-border rounded-lg min-h-[500px]">
+              <div id="contractContent" className="prose prose-sm max-w-none space-y-4 p-4 bg-surface border border-border rounded-lg min-h-[500px]">
                 <h1 className="text-2xl font-bold text-foreground mb-4">Master SaaS Agreement</h1>
                 
                 <p className="text-muted-foreground leading-relaxed">
