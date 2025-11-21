@@ -332,5 +332,87 @@ OCR Import & Focus Bookmarks</CardTitle>
           </p>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Why We're Building This (Business Perspective)</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">The problem we see</h3>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              <li>Sales cycles slow down at the authoring/negotiation handoff. First drafts take time; risky changes hide in redlines; scanned PDFs block search/extraction.</li>
+              <li>Legal becomes a bottleneck for standard deals; Sales loses momentum and forecast confidence.</li>
+              <li>Repositories contain "dark data" (legacy scans, third‑party paper) that current CLM cannot search or reason over.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">Our solution in this prototype</h3>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              <li>SmartDraft Agent for Sales Ops: creates the first draft from deal details, flags non‑standard terms, explains "Why?", and guides responses to redlines.</li>
+              <li>OCR Import turns non‑searchable scans into usable text with confidence scores and one‑click "Apply to Draft."</li>
+              <li>Focus Bookmarks give Sales/Ops a watchlist of must‑resolve items with jump‑to‑clause, notes, and a soft guard at Finalize.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">Why this matters to customers</h3>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              <li>Faster path from "Verbal Yes" → signature; fewer back‑and‑forth cycles with Legal on standard deals.</li>
+              <li>Lower risk via visible policy thresholds (SLA, liability, governing law) and explainable "Why?" rationales.</li>
+              <li>Searchable corpus including scans → better answers, fewer re‑types, stronger auditability.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">Why this matters to Sirion</h3>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              <li>Expands Sirion's footprint into Sales/Ops with an agent that orchestrates Store/Repository, Drafting/Negotiation, and Risk/Performance.</li>
+              <li>Increases attach/adoption of Drafting & Negotiation seats; creates an add‑on SKU ("Sales Ops Agent") and unlocks data for downstream analytics.</li>
+              <li>Differentiates Sirion with agentic CLM that works even on legacy/third‑party paper (via OCR).</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">Commercial shape (illustrative)</h3>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              <li>Packaging: Sales Ops Agent add‑on; seat‑based or per‑contract volume tiers.</li>
+              <li>Bundles: with Drafting + Repository; OCR quota included.</li>
+              <li>Expansion levers: risk analytics, obligation tracking, renewal insights.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">KPIs we expect to move</h3>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              <li>⏱ Cycle time "Verbal Yes → Signed" (target ↓ 40%)</li>
+              <li>🔁 Negotiation iterations per contract (target ≤ 2)</li>
+              <li>📄 % drafts from standard templates (target ↑ 30%)</li>
+              <li>🧑‍⚖️ Legal‑touch rate on mid‑market deals (target ↓ 25%)</li>
+              <li>🗂 OCR coverage of inbound/legacy contracts (target ↑ month‑over‑month)</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">Leading indicators (first 30–60 days)</h3>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              <li>AI suggestion acceptance rate (draft + redlines)</li>
+              <li>% Focus items resolved before Finalize</li>
+              <li>Search success on newly OCR'd docs</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">Risks & how we mitigate</h3>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              <li>Hallucinations → use policy‑tethered suggestions with "Why?" rationale; require approval on High‑risk deviations.</li>
+              <li>Permissions/data scope → respect Sirion roles; no cross‑workspace bleed.</li>
+              <li>Low OCR confidence → auto‑flag in Insights; human review required before apply.</li>
+              <li>Change control → in‑product Audit Log; Save/Export keep actions transparent.</li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
     </div>;
 }
