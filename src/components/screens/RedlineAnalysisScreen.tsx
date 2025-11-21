@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,11 +8,13 @@ import { useAuditLog } from "@/components/AuditLog";
 import { useDraftSession } from "@/contexts/DraftSessionContext";
 import { useFocusBookmarks } from "@/contexts/FocusBookmarksContext";
 import { WhyPopover } from "@/components/WhyPopover";
+import { RedlineChat } from "@/components/RedlineChat";
 
 export function RedlineAnalysisScreen() {
   const { addEvent } = useAuditLog();
   const { markDirty } = useDraftSession();
   const { addFocus, removeFocus, findByAnchor } = useFocusBookmarks();
+  const [cardStatuses, setCardStatuses] = useState<Record<string, { status: string; counterPreview?: string }>>({});
 
   const scrollToClause = (clauseId: string) => {
     addEvent("Navigated to clause", `Viewed redline clause: ${clauseId}`);
@@ -22,6 +25,18 @@ export function RedlineAnalysisScreen() {
   const handleAction = (action: string, clause: string) => {
     markDirty();
     addEvent(`Redline ${action}`, `${action} change in ${clause}`);
+  };
+
+  const handleCounterApply = (changeId: string, clauseType: string, counterText: string) => {
+    markDirty();
+    setCardStatuses(prev => ({
+      ...prev,
+      [changeId]: {
+        status: "Countered",
+        counterPreview: counterText.slice(0, 100) + (counterText.length > 100 ? "…" : "")
+      }
+    }));
+    addEvent("Counter applied", `Counter applied on ${clauseType} (${changeId})`);
   };
 
   return (
@@ -69,8 +84,15 @@ export function RedlineAnalysisScreen() {
               <div className="space-y-1">
                 <CardTitle className="text-base">Payment Terms - Section 4.2</CardTitle>
                 <CardDescription>Changed from Net-30 to Net-45</CardDescription>
+                {cardStatuses["change-1"]?.counterPreview && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Proposed counter: {cardStatuses["change-1"].counterPreview}
+                  </p>
+                )}
               </div>
-              <Badge variant="default" className="bg-ok text-white">Acceptable</Badge>
+              <Badge variant="default" className="bg-ok text-white">
+                {cardStatuses["change-1"]?.status || "Acceptable"}
+              </Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -85,6 +107,17 @@ export function RedlineAnalysisScreen() {
             <p className="text-sm text-muted-foreground">
               <strong className="text-foreground">AI Suggestion:</strong> Accept this change. Extended payment terms are common and within acceptable risk threshold.
             </p>
+            
+            <RedlineChat
+              changeId="change-1"
+              risk="low"
+              clauseType="Payment"
+              originalText="Payment due within 30 days"
+              proposedText="Payment due within 45 days"
+              anchorId="clause-7-payment"
+              onCounterApply={(text) => handleCounterApply("change-1", "Payment Terms", text)}
+            />
+
             <div className="flex items-center gap-2">
               <Button 
                 size="sm" 
@@ -153,8 +186,15 @@ export function RedlineAnalysisScreen() {
               <div className="space-y-1">
                 <CardTitle className="text-base">Liability Cap - Section 8.1</CardTitle>
                 <CardDescription>Changed from 2x to 1x annual fees</CardDescription>
+                {cardStatuses["change-2"]?.counterPreview && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Proposed counter: {cardStatuses["change-2"].counterPreview}
+                  </p>
+                )}
               </div>
-              <Badge variant="default" className="bg-warn text-white">Needs Review</Badge>
+              <Badge variant="default" className="bg-warn text-white">
+                {cardStatuses["change-2"]?.status || "Needs Review"}
+              </Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -169,6 +209,17 @@ export function RedlineAnalysisScreen() {
             <p className="text-sm text-muted-foreground">
               <strong className="text-foreground">AI Suggestion:</strong> Counter with 1.5x compromise. This protects both parties while addressing their concern.
             </p>
+            
+            <RedlineChat
+              changeId="change-2"
+              risk="medium"
+              clauseType="Liability"
+              originalText="Liability capped at 2x annual contract value"
+              proposedText="Liability capped at 1x annual contract value"
+              anchorId="clause-8-liability"
+              onCounterApply={(text) => handleCounterApply("change-2", "Liability Cap", text)}
+            />
+
             <div className="flex items-center gap-2">
               <Button 
                 size="sm" 
@@ -237,8 +288,15 @@ export function RedlineAnalysisScreen() {
               <div className="space-y-1">
                 <CardTitle className="text-base">Data Storage - Section 6.3</CardTitle>
                 <CardDescription>Added "EU servers only" requirement</CardDescription>
+                {cardStatuses["change-3"]?.counterPreview && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Proposed counter: {cardStatuses["change-3"].counterPreview}
+                  </p>
+                )}
               </div>
-              <Badge variant="default" className="bg-ok text-white">Acceptable</Badge>
+              <Badge variant="default" className="bg-ok text-white">
+                {cardStatuses["change-3"]?.status || "Acceptable"}
+              </Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -250,6 +308,17 @@ export function RedlineAnalysisScreen() {
             <p className="text-sm text-muted-foreground">
               <strong className="text-foreground">AI Suggestion:</strong> Accept if infrastructure supports it. This is a standard GDPR compliance request.
             </p>
+            
+            <RedlineChat
+              changeId="change-3"
+              risk="low"
+              clauseType="Data Residency"
+              originalText=""
+              proposedText="All customer data must be stored on servers located within the European Union"
+              anchorId="clause-6-data"
+              onCounterApply={(text) => handleCounterApply("change-3", "Data Storage", text)}
+            />
+
             <div className="flex items-center gap-2">
               <Button 
                 size="sm" 
