@@ -1,15 +1,18 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Upload, Save, Share2, AlertCircle, HelpCircle, Search, Copy, X } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Upload, Save, Share2, AlertCircle, HelpCircle, Search, Copy, X, Info, ExternalLink } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
+import { useAuditLog } from "@/components/AuditLog";
 
 // In-memory contract clause index
 const CLAUSES = [
@@ -38,6 +41,7 @@ export function DraftEditorScreen() {
   
   const isMobile = useIsMobile();
   const { toast } = useToast();
+  const { addEvent } = useAuditLog();
 
   const handleSuggestionClick = (question: string) => {
     setChatMessages([...chatMessages, { role: "user", text: question }]);
@@ -143,7 +147,9 @@ export function DraftEditorScreen() {
     setTimeout(() => {
       element.classList.remove("clause-pulse");
     }, 800);
-  }, []);
+    
+    addEvent("Navigated to clause", `Scrolled to: ${clauseId}`);
+  }, [addEvent]);
 
   const copyExcerpt = useCallback((text: string) => {
     if (!navigator.clipboard) {

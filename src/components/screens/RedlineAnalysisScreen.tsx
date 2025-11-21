@@ -1,9 +1,23 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, CheckCircle, XCircle } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { AlertCircle, CheckCircle, XCircle, Info, ExternalLink } from "lucide-react";
+import { useAuditLog } from "@/components/AuditLog";
 
 export function RedlineAnalysisScreen() {
+  const { addEvent } = useAuditLog();
+
+  const scrollToClause = (clauseId: string) => {
+    addEvent("Navigated to clause", `Viewed redline clause: ${clauseId}`);
+    // In a real implementation, this would scroll to the clause in the document
+    window.location.hash = "#draft";
+  };
+
+  const handleAction = (action: string, clause: string) => {
+    addEvent(`Redline ${action}`, `${action} change in ${clause}`);
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="space-y-2">
@@ -65,9 +79,44 @@ export function RedlineAnalysisScreen() {
             <p className="text-sm text-muted-foreground">
               <strong className="text-foreground">AI Suggestion:</strong> Accept this change. Extended payment terms are common and within acceptable risk threshold.
             </p>
-            <div className="flex gap-2">
-              <Button size="sm" className="transition-all hover:brightness-95">Accept</Button>
-              <Button size="sm" variant="outline" className="transition-all">Counter</Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                size="sm" 
+                className="transition-all hover:brightness-95"
+                onClick={() => handleAction("accepted", "Payment Terms")}
+              >
+                Accept
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="transition-all"
+                onClick={() => handleAction("countered", "Payment Terms")}
+              >
+                Counter
+              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button size="sm" variant="ghost" className="h-8 px-2">
+                      <Info className="h-3 w-3 mr-1" />
+                      Why?
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <p className="text-xs">Playbook rule: Payment terms up to Net-60 are acceptable for enterprise deals.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-8 px-2"
+                onClick={() => scrollToClause("clause-7-payment")}
+              >
+                <ExternalLink className="h-3 w-3 mr-1" />
+                Go to clause
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -95,9 +144,44 @@ export function RedlineAnalysisScreen() {
             <p className="text-sm text-muted-foreground">
               <strong className="text-foreground">AI Suggestion:</strong> Counter with 1.5x compromise. This protects both parties while addressing their concern.
             </p>
-            <div className="flex gap-2">
-              <Button size="sm" className="transition-all hover:brightness-95">Accept</Button>
-              <Button size="sm" variant="outline" className="transition-all">Counter (1.5x)</Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                size="sm" 
+                className="transition-all hover:brightness-95"
+                onClick={() => handleAction("accepted", "Liability Cap")}
+              >
+                Accept
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="transition-all"
+                onClick={() => handleAction("countered", "Liability Cap")}
+              >
+                Counter (1.5x)
+              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button size="sm" variant="ghost" className="h-8 px-2">
+                      <Info className="h-3 w-3 mr-1" />
+                      Why?
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <p className="text-xs">Playbook rule: Liability caps below 1.5x require Legal review; unlimited liability requires rejection.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-8 px-2"
+                onClick={() => scrollToClause("clause-8-liability")}
+              >
+                <ExternalLink className="h-3 w-3 mr-1" />
+                Go to clause
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -122,9 +206,35 @@ export function RedlineAnalysisScreen() {
             <p className="text-sm text-muted-foreground">
               <strong className="text-foreground">AI Suggestion:</strong> Accept if infrastructure supports it. This is a standard GDPR compliance request.
             </p>
-            <div className="flex gap-2">
-              <Button size="sm" className="transition-all hover:brightness-95">Accept</Button>
-              <Button size="sm" variant="outline" className="transition-all">Discuss</Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                size="sm" 
+                className="transition-all hover:brightness-95"
+                onClick={() => handleAction("accepted", "Data Storage")}
+              >
+                Accept
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="transition-all"
+                onClick={() => handleAction("discussed", "Data Storage")}
+              >
+                Discuss
+              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button size="sm" variant="ghost" className="h-8 px-2">
+                      <Info className="h-3 w-3 mr-1" />
+                      Why?
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <p className="text-xs">Playbook rule: Data residency requirements are acceptable if infrastructure supports them.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </CardContent>
         </Card>

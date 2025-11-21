@@ -3,6 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { AppSidebar } from "@/components/AppSidebar";
 import { SecurityModal } from "@/components/SecurityModal";
+import { ReviewerGuideModal } from "@/components/ReviewerGuideModal";
 import { LandingScreen } from "@/components/screens/LandingScreen";
 import { DealDetailsScreen } from "@/components/screens/DealDetailsScreen";
 import { DraftEditorScreen } from "@/components/screens/DraftEditorScreen";
@@ -14,6 +15,7 @@ import { HelpCircle, X } from "lucide-react";
 const Index = () => {
   const [currentHash, setCurrentHash] = useState(window.location.hash || "#start");
   const [securityModalOpen, setSecurityModalOpen] = useState(false);
+  const [guideModalOpen, setGuideModalOpen] = useState(false);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -66,16 +68,26 @@ const Index = () => {
                   Sirion SmartDraft AI
                 </h1>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSecurityModalOpen(true)}
-                aria-label="Security Information"
-                className="rounded-full px-3 py-1 hover:bg-brand-primary/20 transition-all focus:ring-2 focus:ring-brand-primary"
-              >
-                <HelpCircle className="h-4 w-4 text-muted-foreground transition-transform hover:-translate-y-0.5" />
-                <span className="text-xs ml-1">Help</span>
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setGuideModalOpen(true)}
+                  className="rounded-full p-2 transition-all hover:bg-brand-primary/10 focus:ring-2 focus:ring-brand-primary"
+                  aria-label="Reviewer Guide"
+                >
+                  <HelpCircle className="h-5 w-5 text-brand-primary" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSecurityModalOpen(true)}
+                  className="flex items-center gap-2 rounded-full px-4 py-2 transition-all hover:brightness-95 hover:shadow-md focus:ring-2 focus:ring-brand-primary"
+                >
+                  <HelpCircle className="h-4 w-4" />
+                  <span className="hidden sm:inline">Security</span>
+                </Button>
+              </div>
             </div>
           </header>
 
@@ -102,6 +114,7 @@ const Index = () => {
       </div>
 
       <SecurityModal open={securityModalOpen} onOpenChange={setSecurityModalOpen} />
+      <ReviewerGuideModal open={guideModalOpen} onOpenChange={setGuideModalOpen} />
     </SidebarProvider>
   );
 };
