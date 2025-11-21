@@ -225,13 +225,21 @@ OCR Import & Focus Bookmarks</CardTitle>
 
       <Card>
         <CardHeader>
-          <CardTitle>How these features fit Sirion (Business sense)</CardTitle>
+          <CardTitle>How This Fits Sirion (Business Sense)</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4 text-muted-foreground">
-          <ul className="space-y-2 text-sm list-disc list-inside">
-            <li>Runs as a Sales Ops agent on agentOS, orchestrating Store/Repository (templates/clauses), Create (Drafting/Negotiation), and Manage (Risk/Performance).</li>
-            <li><strong>KPIs influenced:</strong> Cycle time "Verbal Yes → Signed" (down), Negotiation iterations (down), % drafts from standard templates (up), Legal-touch rate on mid-market deals (down)</li>
-            <li><strong>Guardrails:</strong> Low-confidence OCR blocks are flagged in Insights. Bookmarks are non-blocking but surfaced at Finalize if unresolved.</li>
+        <CardContent>
+          <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+            <li>SmartDraft runs as a Sales Ops agent on agentOS, orchestrating Store/Repository (templates & clause variants), Create (Drafting & Negotiation), and Manage (Risk/Performance).</li>
+            <li>OCR unlocks search/risk analysis for inbound third‑party scans and legacy contracts, expanding the searchable repository.</li>
+            <li>Focus Bookmarks reduce handoffs and keep attention on risk-bearing terms, improving close readiness.</li>
+            <li>KPIs influenced:
+              <ul className="ml-6 mt-1 space-y-1 list-none">
+                <li>– Cycle time "Verbal Yes → Signed" (down)</li>
+                <li>– Negotiation iterations (down)</li>
+                <li>– % drafts from standard templates (up)</li>
+                <li>– Legal-touch rate on mid-market deals (down)</li>
+              </ul>
+            </li>
           </ul>
         </CardContent>
       </Card>
