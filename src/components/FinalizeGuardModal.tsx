@@ -6,6 +6,8 @@ interface FinalizeGuardModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   unresolvedCount: number;
+  unresolvedOCRCount?: number;
+  hasUnresolvedOCR?: boolean;
   onProceed: () => void;
   onReviewFocus: () => void;
 }
@@ -13,7 +15,9 @@ interface FinalizeGuardModalProps {
 export function FinalizeGuardModal({ 
   open, 
   onOpenChange, 
-  unresolvedCount, 
+  unresolvedCount,
+  unresolvedOCRCount = 0,
+  hasUnresolvedOCR = false,
   onProceed, 
   onReviewFocus 
 }: FinalizeGuardModalProps) {
@@ -27,9 +31,14 @@ export function FinalizeGuardModal({
             </div>
             <DialogTitle>Open Focus items</DialogTitle>
           </div>
-          <DialogDescription className="pt-2">
-            You have {unresolvedCount} focus item{unresolvedCount !== 1 ? 's' : ''} still open (High/Medium severity). 
-            These items may require attention before finalizing the contract.
+          <DialogDescription className="pt-2 space-y-2">
+            <p>You have {unresolvedCount} focus item{unresolvedCount !== 1 ? 's' : ''} still open (High/Medium severity). 
+            These items may require attention before finalizing the contract.</p>
+            {hasUnresolvedOCR && (
+              <p className="text-warn">
+                {unresolvedOCRCount} item{unresolvedOCRCount !== 1 ? 's' : ''} from OCR import with low confidence need{unresolvedOCRCount === 1 ? 's' : ''} review.
+              </p>
+            )}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2 sm:gap-0">

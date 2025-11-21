@@ -22,6 +22,8 @@ interface FocusBookmarksContextType {
   findByAnchor: (anchorId: string) => FocusItem | undefined;
   unresolvedCount: number;
   hasUnresolvedHighOrMedium: boolean;
+  unresolvedOCRCount: number;
+  hasUnresolvedOCR: boolean;
 }
 
 const FocusBookmarksContext = createContext<FocusBookmarksContextType | undefined>(undefined);
@@ -73,6 +75,10 @@ export function FocusBookmarksProvider({ children }: { children: ReactNode }) {
   const hasUnresolvedHighOrMedium = focusItems.some(
     f => !f.resolved && (f.severity === 'high' || f.severity === 'medium')
   );
+  const unresolvedOCRCount = focusItems.filter(
+    f => !f.resolved && f.source === 'ocr'
+  ).length;
+  const hasUnresolvedOCR = unresolvedOCRCount > 0;
 
   return (
     <FocusBookmarksContext.Provider value={{ 
@@ -83,7 +89,9 @@ export function FocusBookmarksProvider({ children }: { children: ReactNode }) {
       updateNote, 
       findByAnchor,
       unresolvedCount,
-      hasUnresolvedHighOrMedium
+      hasUnresolvedHighOrMedium,
+      unresolvedOCRCount,
+      hasUnresolvedOCR
     }}>
       {children}
     </FocusBookmarksContext.Provider>
