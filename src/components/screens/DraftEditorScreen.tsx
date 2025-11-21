@@ -197,8 +197,8 @@ export function DraftEditorScreen() {
         <TabsTrigger value="search">Search</TabsTrigger>
       </TabsList>
       
-      <TabsContent value="insights" className="flex-1 mt-4 space-y-4 overflow-auto">
-        <div>
+      <TabsContent value="insights" className="flex-1 mt-0 overflow-y-auto min-h-0">
+        <div className="p-3 space-y-3">
           <h4 className="font-semibold text-sm mb-3 flex items-center gap-2 text-foreground">
             AI Insights & Analysis
           </h4>
@@ -321,8 +321,9 @@ export function DraftEditorScreen() {
         </div>
       </TabsContent>
 
-      <TabsContent value="search" className="flex-1 mt-4 flex flex-col overflow-hidden">
-        <div className="space-y-4">
+      <TabsContent value="search" className="flex h-full flex-col min-h-0">
+        {/* Sticky Search Controls */}
+        <div className="sticky top-0 z-10 bg-surface/60 backdrop-blur supports-[backdrop-filter]:bg-surface/30 border-b border-border/20 px-4 pt-3 pb-3 space-y-3">
           {/* Search Input */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -385,8 +386,8 @@ export function DraftEditorScreen() {
           </div>
         </div>
 
-        {/* Results */}
-        <div className="flex-1 mt-4 space-y-3 overflow-auto">
+        {/* Scrollable Results */}
+        <div className="flex-1 overflow-y-auto min-h-0 px-4 pb-4 space-y-3 mt-3">
           {!debouncedQuery.trim() ? (
             <div className="text-center py-8 text-muted-foreground text-sm">
               <Search className="h-8 w-8 mx-auto mb-2 opacity-50" />
