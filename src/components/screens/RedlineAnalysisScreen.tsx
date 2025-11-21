@@ -2,10 +2,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { AlertCircle, CheckCircle, XCircle, Info, ExternalLink, Star } from "lucide-react";
+import { AlertCircle, CheckCircle, XCircle, ExternalLink, Star } from "lucide-react";
 import { useAuditLog } from "@/components/AuditLog";
 import { useDraftSession } from "@/contexts/DraftSessionContext";
 import { useFocusBookmarks } from "@/contexts/FocusBookmarksContext";
+import { WhyPopover } from "@/components/WhyPopover";
 
 export function RedlineAnalysisScreen() {
   const { addEvent } = useAuditLog();
@@ -100,19 +101,7 @@ export function RedlineAnalysisScreen() {
               >
                 Counter
               </Button>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button size="sm" variant="ghost" className="h-8 px-2">
-                      <Info className="h-3 w-3 mr-1" />
-                      Why?
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    <p className="text-xs">Playbook rule: Payment terms up to Net-60 are acceptable for enterprise deals.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <WhyPopover reasonKey="redline-net45-acceptable" variant="redline" />
               <Button
                 size="sm"
                 variant="ghost"
@@ -196,19 +185,7 @@ export function RedlineAnalysisScreen() {
               >
                 Counter (1.5x)
               </Button>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button size="sm" variant="ghost" className="h-8 px-2">
-                      <Info className="h-3 w-3 mr-1" />
-                      Why?
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    <p className="text-xs">Playbook rule: Liability caps below 1.5x require Legal review; unlimited liability requires rejection.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <WhyPopover reasonKey="redline-liability-1x" variant="redline" />
               <Button
                 size="sm"
                 variant="ghost"
@@ -289,19 +266,7 @@ export function RedlineAnalysisScreen() {
               >
                 Discuss
               </Button>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button size="sm" variant="ghost" className="h-8 px-2">
-                      <Info className="h-3 w-3 mr-1" />
-                      Why?
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    <p className="text-xs">Playbook rule: Data residency requirements are acceptable if infrastructure supports them.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <WhyPopover reasonKey="redline-data-residency" variant="redline" />
             </div>
           </CardContent>
         </Card>
