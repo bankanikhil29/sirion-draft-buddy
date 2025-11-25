@@ -223,39 +223,9 @@ OCR Import & Focus Bookmarks</CardTitle>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>How This Fits Sirion (Business Sense)</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
-            <li>SmartDraft runs as a Sales Ops agent on agentOS, orchestrating Store/Repository (templates & clause variants), Create (Drafting & Negotiation), and Manage (Risk/Performance).</li>
-            <li>OCR unlocks search/risk analysis for inbound third‑party scans and legacy contracts, expanding the searchable repository.</li>
-            <li>Focus Bookmarks reduce handoffs and keep attention on risk-bearing terms, improving close readiness.</li>
-            <li>KPIs influenced:
-              <ul className="ml-6 mt-1 space-y-1 list-none">
-                <li>– Cycle time "Verbal Yes → Signed" (down)</li>
-                <li>– Negotiation iterations (down)</li>
-                <li>– % drafts from standard templates (up)</li>
-                <li>– Legal-touch rate on mid-market deals (down)</li>
-              </ul>
-            </li>
-          </ul>
-        </CardContent>
-      </Card>
+      
 
-      <Card>
-        <CardHeader>
-          <CardTitle>What to click (Reviewer path)</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ol className="space-y-2 text-sm text-muted-foreground list-decimal list-inside">
-            <li>Draft Editor → Upload redlines → "Scanned PDF/Image (OCR)" → Apply to Draft</li>
-            <li>Focus tab → Add a few bookmarks from clauses, insights, or redlines</li>
-            <li>Finalize → See the guard modal for unresolved items</li>
-          </ol>
-        </CardContent>
-      </Card>
+      
 
       <Card>
         <CardHeader>
@@ -366,11 +336,11 @@ OCR Import & Focus Bookmarks</CardTitle>
           </div>
 
           <div>
-            <h3 className="font-semibold text-foreground mb-2">Why this matters to Sirion</h3>
+            
             <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
-              <li>Expands Sirion's footprint into Sales/Ops with an agent that orchestrates Store/Repository, Drafting/Negotiation, and Risk/Performance.</li>
-              <li>Increases attach/adoption of Drafting & Negotiation seats; creates an add‑on SKU ("Sales Ops Agent") and unlocks data for downstream analytics.</li>
-              <li>Differentiates Sirion with agentic CLM that works even on legacy/third‑party paper (via OCR).</li>
+              
+              
+              
             </ul>
           </div>
 
@@ -384,24 +354,11 @@ OCR Import & Focus Bookmarks</CardTitle>
           </div>
 
           <div>
-            <h3 className="font-semibold text-foreground mb-2">KPIs we expect to move</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
-              <li>⏱ Cycle time "Verbal Yes → Signed" (target ↓ 40%)</li>
-              <li>🔁 Negotiation iterations per contract (target ≤ 2)</li>
-              <li>📄 % drafts from standard templates (target ↑ 30%)</li>
-              <li>🧑‍⚖️ Legal‑touch rate on mid‑market deals (target ↓ 25%)</li>
-              <li>🗂 OCR coverage of inbound/legacy contracts (target ↑ month‑over‑month)</li>
-            </ul>
+            
+            
           </div>
 
-          <div>
-            <h3 className="font-semibold text-foreground mb-2">Leading indicators (first 30–60 days)</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
-              <li>AI suggestion acceptance rate (draft + redlines)</li>
-              <li>% Focus items resolved before Finalize</li>
-              <li>Search success on newly OCR'd docs</li>
-            </ul>
-          </div>
+          
 
           <div>
             <h3 className="font-semibold text-foreground mb-2">Risks & how we mitigate</h3>
